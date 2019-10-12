@@ -1,0 +1,108 @@
+<header>
+    <nav class="navbar">
+        <div class="navbar-header">
+            <div class="logo">
+                <a class="navbar-brand" href="javascript:void(0)" title="Omni" (click)="logoClick()">
+                    <img src="./assets/images/larvol-logo-white.png" alt="Omni" />
+                    <!-- <span>BETA</span> -->
+                </a>
+            </div>
+            <div class="search-bar" [ngClass]="{'disabled': searchExist == true, 'search-focus': isSearchFocus == true}">
+                <input id="searchInput" onfocus="this.ph=this.placeholder;this.placeholder=''" onblur="this.placeholder = this.ph" class="search form-control search-wrap" type="text" placeholder="{{placeHolder}}" (keyup.enter)="search($event)" [(ngModel)]="searchText"
+                    (input)="search($event)" *ngIf="isHomePage && isLogin" (focus)="getSearchBoxFocus($event)" (focusout)="removeSearchBoxFocus($event)" (keyup.enter)="enterKeyPress($event)">
+                <span class="search-icon" *ngIf="isHomePage && isLogin">
+                    <i class="fa fa-search" (click)="openSearchResultScreen()"></i>
+                </span>
+                <span class="page-heading" *ngIf="!isHomePage">{{KOLsData | trimstr : 30}}</span>
+            </div>
+
+            <div class="menu-icon" [ngClass]="{menuClosed: !shouldShow, menuOpen: shouldShow}" (click)="hideShowClass('menu');" *ngIf="isLogin">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </div>
+        </div>
+        <div class="menu-bar" id="myNavbar" [ngClass]="{show: shouldShow, hide: !shouldShow}" (click)="closeSideMenu()">
+            <div class="menu-content" (click)="clickSideMenu()">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="javascript:void(0)">
+                            <span class="user-img" *ngIf="!usersData?.image_url" [ngClass]="{'img-round-sec' : usersData?.image_url == null}">
+                                <!-- <img src="../../../assets/images/default-user.png" alt="User Icon"> -->
+                                <span class="text-round">{{getNameInitials()}}</span>
+                            </span>
+                            <span class="user-img" *ngIf="usersData?.image_url">
+                                <img [src]="usersData?.image_url" alt="User Icon">
+                            </span>
+                            <span class="user-name">{{usersData?.full_name}}</span>
+                        </a>
+                    </li>
+                    <li routerLinkActive="active" *ngIf="isShowNotification">
+                        <a href="javascript:void(0)" title="Notifications" [routerLink]="getRedirectionlink('/notification')" (click)="hideShowClass(''); notificationCounts=0">
+                            <span class="badge noti-badge icon" *ngIf="notificationCounts > 0 && notificationCounts < 1000">{{notificationCounts}}</span>
+                            <span class="badge noti-badge icon" *ngIf="notificationCounts >= 1000">999+</span>
+                            Notifications
+                        </a>
+                    </li>
+                    <li routerLinkActive="active">
+                        <a [routerLink]="getRedirectionlink('/subscription-list')" href="javascript:void(0)" title="My Subscriptions" (click)="hideShowClass('')">
+                            <span class="icon"><i class="fa fa-star"></i></span> My Subscriptions
+                        </a>
+                    </li>
+                    <li [ngClass]="{'active': isKolsActive == true}">
+                        <a href="javascript:void(0)" title="KOLs" (click)="hideShowClass('kol')">
+                            <span class="user-icon icon"><i class="fa fa-user"></i></span>
+                            <span class="badge noti-badge kol-badge" *ngIf="usersData?.favourite_kols_count > 0 && usersData?.favourite_kols_count < 1000">{{usersData?.favourite_kols_count}}</span>
+                            <span class="badge noti-badge kol-badge" *ngIf="usersData?.favourite_kols_count >= 1000">999+</span>KOLs
+                        </a>
+                    </li>
+                    <li [ngClass]="{'active': isDrugActive == true}">
+                        <a href="javascript:void(0)" title="Drugs" (click)="hideShowClass('drug')">
+                            <span class="badge noti-badge kol-badge" *ngIf="usersData?.favourite_products_count > 0 && usersData?.favourite_products_count < 1000">{{usersData?.favourite_products_count}}</span>
+                            <span class="badge noti-badge kol-badge" *ngIf="usersData?.favourite_products_count >= 1000">999+</span>Drugs
+                        </a>
+                    </li>
+                    <!-- <li routerLinkActive="active">
+                        <a href="javascript:void(0)" title="Drugs" (click)="hideShowClass('/notes-list')">
+                            <span class="icon icon-note"><i class="fa fa-medkit"></i></span>
+                            Drugs</a>
+                    </li> -->
+                    <li routerLinkActive="active">
+                        <a href="javascript:void(0)" title="Notes" (click)="hideShowClass('')" [routerLink]="getRedirectionlink('/notes-list')">
+                            <span class="icon icon-note"><i class="fa fa-file-text-o"></i></span> Notes
+                        </a>
+                    </li>
+                    <li routerLinkActive="active">
+                        <a href="javascript:void(0)" title="Bookmarks" (click)="hideShowClass('')" [routerLink]="getRedirectionlink('/bookmark-news')">
+                            <span class="icon bookmark-icon"><i class="fa fa-bookmark"></i></span> Bookmarks
+                        </a>
+                    </li>
+                    <li routerLinkActive="active">
+                        <a href="javascript:void(0)" title="Terms Of Service" (click)="hideShowClass('')" [routerLink]="'/terms-of-service'">Terms Of Service</a>
+                    </li>
+                    <li routerLinkActive="active">
+                        <a href="javascript:void(0)" title="Privacy Policy" (click)="hideShowClass('')" [routerLink]="'/privacy-policy'">Privacy Policy</a>
+                    </li>
+                    <!-- <li routerLinkActive="active">
+                        <a href="javascript:void(0)" title="Cookie Policy" [routerLink]="['/cookie-policy']" (click)="hideShowClass()">Cookie Policy</a>
+                    </li> -->
+                    <!-- <li routerLinkActive="active">
+                        <a href="javascript:void(0)" title="Bookmark KOLs" [routerLink]="['/bookmark-kols']" (click)="hideShowClass()">Bookmark KOLs</a>
+                    </li> -->
+                    <li routerLinkActive="active">
+                        <a href="javascript:void(0)" title="Feedback" (click)="hideShowClass('')" [routerLink]="getRedirectionlink('/feedback')">Feedback</a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" title="Sign Out" (click)="signOutModal()">Sign Out</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="menu-footer">
+                &copy; {{currentYear}} Larvol. All Rights Reserved.
+            </div>
+        </div>
+
+    </nav>
+</header>
+<app-kols-search-list *ngIf="isShow" [searchText]="searchText"></app-kols-search-list>
+<app-drug-search-list *ngIf="isDrugShow" [searchText]="searchText"></app-drug-search-list>

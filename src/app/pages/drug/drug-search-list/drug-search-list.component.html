@@ -1,0 +1,88 @@
+<div class="background-overlay" (click)="closePage()">
+    <div class="kol-search-sec" (click)="clickSearchPage()">
+        <div class="kol-search-list">
+
+            <!-- screen #1 default-data-start-->
+            <div class="search-heading" *ngIf="!searchText">
+                <span class="heading-text">Recent Searches</span>
+                <span class="clear-text" (click)="clearAllRecentData()" *ngIf="recentSearchData?.length > 0">Clear</span>
+            </div>
+            <div class="kols-list" *ngIf="!searchText">
+                <div class="kols-block" *ngFor="let list of recentSearchData">
+                    <div class="row">
+                        <div class="col-md-10 col-10">
+                            <div class="info-sec info-search">
+                                <h3 (click)="openRecentSearchProduct(list);searchTermGoogleAnalytics(list?.product_name)">
+                                    <a href="javascript:void(0)" *ngIf="list?.product_name">{{list?.product_name}}</a>
+                                    <a href="javascript:void(0)" *ngIf="list?.search_text">{{list?.search_text}}</a>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="kols-list" *ngIf="recentSearchData?.length == 0 && isRecentLoad">
+                    <div class="bouncing-loader">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                </div>
+            </div>
+            <!-- screen #1 default-data-end-->
+            <!--screen #4 screen-search-registered-user-start-->
+            <div class="kols-list" *ngIf="showData && productsData?.length > 0">
+                <div class="kols-block" *ngFor="let item of productsData; let index = index; ">
+                    <div class="row">
+                        <div class="col-md-10 col-10" (click)="openProductDetail(item);searchTermGoogleAnalytics(item?.name)">
+                            <div class="info-sec">
+                                <h3>
+                                    <a href="javascript:void(0)">{{item?.name}}</a>
+                                </h3>
+                                <p>
+                                    <span>{{item?.institutions_list}}</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-2">
+                            <div class="badge-sec">
+                                <span class="badge red-bg" *ngIf="item?.product_notification_count > 0">
+                                    <!-- <span>{{item?.product_notification_count}}</span> -->
+                                <span *ngIf="item?.product_notification_count >= 1000">999+</span>
+                                <span *ngIf="item?.product_notification_count < 1000">{{item?.product_notification_count}}</span>
+                                </span>
+                                <app-drug-star-view [productData]="item" class="dashboard-fav"></app-drug-star-view>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="kols-list no-kols" *ngIf="showData && productsData?.length == 0 && !isLoad">
+                <div class="section-middle no-result-found-wrapper">
+                    <div class="no-result" *ngIf="searchText?.length >= 3">
+                        <div class="no-kols-sec no-kol-content">
+                            <p>Try again with a different search term.
+                                <br> Didn’t find what you were looking for?
+                                <span>
+                                    <a href="javascript:void(0)" (click)="openDrugRequestPage()">Let us know</a>
+                                </span> and
+                                <br> we’ll add the drug you’re interested in.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="kols-list" *ngIf="productsData?.length == 0 && isLoad">
+                <div class="bouncing-loader">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+            <div class="search-bottom-section" *ngIf="showData">
+                <div class="get_all_result">
+                    <p (click)="openSearchResultPage()">See all results for "{{searchText}}"</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

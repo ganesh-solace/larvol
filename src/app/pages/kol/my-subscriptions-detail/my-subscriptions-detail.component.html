@@ -1,0 +1,118 @@
+<div class="breadcrumbs-sec">
+    <div class="container">
+        <ul class="breadcrubs-list previous-page">
+            <li (click)="goBack()">
+                <a href="javascript:void(0)" title="{{backTitle}}">{{backTitle}}</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<section class="sec-kols" *ngIf="teamHeader">
+    <div class="container">
+        <div class="kols-list">
+            <!--editable sec start-->
+            <div class="subscription-detail-sec editable-sec">
+                <!-- sticky header sec start-->
+                <div class="subscription-header" id="kolInfo" #kolInfo (window:scroll)="onWindowScroll($event)" (window:resize)="onResize($event)">
+                    <div class="team-name">
+                        <h4 *ngIf="teamHeader.description && !isEdit" class="">{{teamHeader.description}}
+                            <span class="edit-icon" *ngIf="teamHeader.super_user_id && !isEdit" (click)="editTeamName(teamHeader.description)"><i class="fa fa-pencil"></i></span></h4>
+                        <div class="edit-form" [ngClass]="{'hide': !isEdit}">
+                            <div class="form-area">
+                                <input type="text" class="form-control" [(ngModel)]="teamName" placeholder="Team Name here" onfocus="this.ph=this.placeholder;this.placeholder=''" onblur="this.placeholder = this.ph">
+                            </div>
+                            <span class="action-btn">
+                <span class="submit-btn" title="Submit" (click)="updateTeamName()"><i class="fa fa-check"></i></span>
+                            <span class="submit-btn cancel-btn" title="Cancel" (click)="cancelTeamName()"><i class="fa fa-times"></i></span>
+                            </span>
+                        </div>
+                        <span class="description" *ngIf="teamHeader.entity">{{teamHeader.entity}}</span>
+                    </div>
+                    <div class="detail">
+                        <div class="detail-content">
+                            <h4>{{teamHeader.subscribed}}</h4>
+                            <span class="description">Subscribed</span>
+                        </div>
+                        <div class="detail-content">
+                            <h4>{{teamHeader.starred}}</h4>
+                            <span class="description">Starred</span>
+                        </div>
+                        <div class="detail-content">
+                            <h4>{{teamHeader.avilable}}</h4>
+                            <span class="description">Available</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- sticky header sec end-->
+                <div class="subscription-list">
+                    <div class="col-md-10" *ngIf="teamHeader.super_user_id">
+                        <div class="search-box">
+                            <div class="form-group dropdown-content">
+                                <span class="width-span">
+                <input type="text" onfocus="this.ph=this.placeholder;this.placeholder=''" onblur="this.placeholder = this.ph" placeholder="Select KOL as premium..." [(ngModel)]="kolKeyword" class="form-control institute search-institute" (input)="searchKolFromList($event)">
+                </span>
+                                <div class="suggestion-list" *ngIf="allKols?.length > 0 && isClicked && kolKeyword?.length > 2">
+                                    <ul class="search-list" infiniteScroll (scrolled)="onScroll($event)" [scrollWindow]="false">
+                                        <li *ngFor="let item of allKols; let index = index; " (click)="selectKol(item);">
+                                            <span class="name">{{item?.kol_full_name}}<span *ngIf="item?.kol_qualification && item?.kol_full_name">, {{item?.kol_qualification}}</span></span>
+
+                                            <span *ngFor="let list of item?.kolInstitutionsData; let ind = index;">
+                          <span *ngIf="ind < 3">                            
+                              <span class="affilation">
+                                  {{list}}
+                                <span *ngIf="ind == 2 && item?.kolInstitutionsData.length > 3">...</span>
+                                            </span>
+                                            </span>
+                                            </span>
+
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <button class="btn-add" type="submit" title="Add" (click)="checkExistingKol()">add</button>
+                        </div>
+                    </div>
+
+                    <ul *ngIf="showData && teamDetail?.length > 0">
+                        <li *ngFor="let item of teamDetail">
+                            <div class="user-info">
+                                <h5><a href="javascript:void(0)" (click)="openKOLsDetail(item)">{{item?.kol_full_name}}<span *ngIf="item?.kol_qualification && item?.kol_full_name">, {{item?.kol_qualification}}</span></a></h5>
+                                <span *ngFor="let list of item?.kolInstitutionsData; let ind = index;">
+                  <span *ngIf="ind < 3">                    
+                      <p>
+                        {{list}}
+                        <span *ngIf="ind == 2 && item?.kolInstitutionsData.length > 3">...</span>
+                                </p>
+                                </span>
+                                </span>
+                            </div>
+                            <div class="kol-favourite" *ngIf="teamHeader.super_user_id">
+                                <span class="favourite-icon" title="{{item?.starTitle}}" [ngClass]="{'selected' : item?.favourite == true}" (click)="addOrRemoveFavouriteKols(item, content)">
+                  <i class="fa" [ngClass]="{'fa-star' : item?.favourite == true, 'fa-star-o' : item?.favourite == false}"></i>
+                </span>
+                            </div>
+                            <div class="kol-favourite" *ngIf="!teamHeader.super_user_id">
+                                <span class="favourite-icon selected">
+                  <i class="fa fa-star"></i>
+                </span>
+                            </div>
+                        </li>
+                    </ul>
+
+                    <ul *ngIf="!showData && teamDetail?.length == 0">
+                        <li>
+                            <div class="no-content">
+                                <h3>No Premium Kol</h3>
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="btn-list" *ngIf="(teamHeader.super_user_id && teamDetail?.length > 0) || isNameEdit">
+                        <button class="btn-cancel btn" title="Cancel" (click)="cancelSubdetails()">Cancel</button>
+                        <button class="btn-save btn btn-primary" title="Save" (click)="saveSubdetails()">Save</button>
+                    </div>
+                </div>
+            </div>
+            <!--editable sec end-->
+        </div>
+    </div>
+</section>

@@ -1,0 +1,81 @@
+<div class="breadcrumbs-sec">
+    <div class="container">
+        <ul class="breadcrubs-list">
+            <li>
+                <a href="javascript:void(0)" title="Home" [routerLink]="['']">Home</a>
+            </li>
+            <li>
+                <a href="javascript:void(0)" title="KOL Request" class="active">KOL Request</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="login-sec">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="border-form border-sec form-sec counter-request safari_only">
+                    <div class="row">
+                        <div class="col-6 mx-auto">
+                            <form class="example-form" [formGroup]="requestForm" novalidate>
+                                <div class="form-group">
+                                    <!-- <mat-form-field class="example-full-width">
+                                        <input matInput type="text" formControlName="first_name" placeholder="First Name *" class="form-control">
+                                        <span class="error" *ngIf="requestForm.controls.first_name.touched && requestForm.controls.first_name.errors?.required">*Enter First Name.​</span>                                    
+                                    </mat-form-field> -->
+                                    <input onfocus="this.ph=this.placeholder;this.placeholder=''" onblur="this.placeholder = this.ph" class="form-control" type="text" formControlName="first_name" placeholder="First Name *">
+                                    <span class="error" *ngIf="requestForm.controls.first_name.touched && requestForm.controls.first_name.errors?.required">*Please enter first name.​</span>
+                                </div>
+                                <div class="form-group">
+                                    <!-- <mat-form-field class="example-full-width"> -->
+                                    <input onfocus="this.ph=this.placeholder;this.placeholder=''" onblur="this.placeholder = this.ph" type="text" formControlName="last_name" placeholder="Last Name *" class="form-control">
+                                    <span class="error" *ngIf="requestForm.controls.last_name.touched && requestForm.controls.last_name.errors?.required">*Please enter last name​.</span>
+                                    <!-- </mat-form-field> -->
+                                </div>
+                                <div class="form-group">
+                                    <!-- <mat-form-field class="example-full-width"> -->
+                                    <input onfocus="this.ph=this.placeholder;this.placeholder=''" onblur="this.placeholder = this.ph" type="text" formControlName="affiliation" placeholder="Affiliation" class="form-control">
+                                    <!-- </mat-form-field> -->
+                                </div>
+                                <div class="form-group">
+                                    <!-- <mat-form-field class="example-full-width"> -->
+                                    <input onfocus="this.ph=this.placeholder;this.placeholder=''" onblur="this.placeholder = this.ph" type="text" formControlName="specialization" placeholder="Specialization" class="form-control">
+                                    <!-- </mat-form-field> -->
+                                </div>
+                                <div class="form-group">
+                                    <!-- <mat-form-field class="example-full-width"> -->
+                                    <input onfocus="this.ph=this.placeholder;this.placeholder=''" onblur="this.placeholder = this.ph" type="text" formControlName="city" placeholder="City" class="form-control">
+                                    <!-- </mat-form-field> -->
+                                </div>
+                                <div class="form-group">
+                                    <!-- <mat-form-field class="example-full-width"> -->
+                                    <input onfocus="this.ph=this.placeholder;this.placeholder=''" onblur="this.placeholder = this.ph" type="text" formControlName="country" placeholder="Country" class="form-control">
+                                    <!-- </mat-form-field> -->
+                                </div>
+                                <div class="form-group">
+                                    <!-- <mat-form-field class="example-full-width"> -->
+                                    <input onfocus="this.ph=this.placeholder;this.placeholder=''" onblur="this.placeholder = this.ph" type="text" formControlName="other" placeholder="Other" class="form-control">
+                                    <!-- </mat-form-field> -->
+                                </div>
+                                <!-- <div class="form-group text-center">
+                                    <button class="btn btn-primary" type="submit" title="Submit" (click)="submitKolRequest()">Submit</button>
+                                </div> -->
+                                <div class="form-group">
+                                    <ul class="btn-list list-inline">
+                                        <li>
+                                            <button class="btn btn-primary btn-cancel" type="button" title="Cancel" (click)="cancelClick()">Cancel</button>
+                                        </li>
+                                        <li>
+                                            <button class="btn btn-primary" type="submit" title="Submit" (click)="submitKolRequest()">Submit</button>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

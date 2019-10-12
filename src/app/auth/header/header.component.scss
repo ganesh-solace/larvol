@@ -1,0 +1,28 @@
+header{
+    padding: 5px 0;
+    text-align: center;
+    -webkit-box-shadow: 0px 0px 18px -2px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 18px -2px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 18px -2px rgba(0,0,0,0.75);
+    background: #fff;
+    a{
+        display: inline-block;
+        max-width: 148px;
+        @media(max-width:576px){
+            max-width: 104px;
+        }
+        
+    }
+    span{
+        color: #4e2a87;
+        font-size: 20px;
+        margin-left: 5px;
+        display: inline-block;
+        font-style: italic;
+        vertical-align: bottom;
+        font-weight: 600;
+        @media(max-width:767px){
+            font-size: 18px;
+        }
+    }
+}

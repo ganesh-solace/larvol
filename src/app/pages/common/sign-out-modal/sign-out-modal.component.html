@@ -1,0 +1,13 @@
+<div class="modal-header">
+    <h4 class="modal-title"> </h4>
+    <button type="button" (click)="close()" class="close" data-dismiss="modal"><span><img src="./assets/images/cancel.png" alt="cancel"></span></button>
+</div>
+<div class="modal-body">
+    <p>Would you like to sign out?</p>
+</div>
+<div class="modal-footer">
+    <ul class="btn-list list-inline">
+        <li><button class="btn btn-primary btn-confirm" type="reset" title="Cancel" (click)="close()">Cancel</button></li>
+        <li><button class="btn btn-primary btn-cancel" type="submit" title="Yes" (click)="signOut()">Yes</button></li>
+    </ul>
+</div>

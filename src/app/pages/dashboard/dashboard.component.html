@@ -1,0 +1,216 @@
+<div class="dashboard-sec">
+    <!-- <div class="heading-sec" *ngIf="kolsData?.length == 0 && userMode === 'ltl'">
+        <div class="container">
+            <h1>KOLs</h1>
+        </div>
+    </div> -->
+    <div class="subscription-block" *ngIf="selectedTab == 'kol'">
+        <div class="container">
+            <div class="subscription-bg" *ngIf="isLAPP && isExpired">
+                <p *ngIf="remainingDays > 1">Your subscription expires in {{remainingDays}} days.</p>
+                <p *ngIf="remainingDays == 1">Your subscription expires in {{remainingDays}} day.</p>
+                <p *ngIf="remainingDays == 0">Your subscription expires by today.</p>
+                <p *ngIf="remainingDays == null">Your subscription has been expired.</p>
+                <p>To renew your subscription, please contact <a href="mailto:omni@larvol.com">omni@larvol.com</a></p>
+            </div>
+            <div class="subscription-bg" *ngIf="!isLAPP && expiredMsg">
+                <p>
+                    {{expiredMsg}}.
+                </p>
+                <p>To renew your subscription, please contact <a href="mailto:omni@larvol.com">omni@larvol.com</a></p>
+            </div>
+        </div>
+    </div>
+    <div class="subscription-block" *ngIf="selectedTab == 'drug'">
+        <div class="container">
+            <div class="subscription-bg" *ngIf="isLAPP && isDrugExpired">
+                <p *ngIf="drugRemainingDays > 1">Your subscription expires in {{drugRemainingDays}} days.</p>
+                <p *ngIf="drugRemainingDays == 1">Your subscription expires in {{drugRemainingDays}} day.</p>
+                <p *ngIf="drugRemainingDays == 0">Your subscription expires by today.</p>
+                <p *ngIf="drugRemainingDays == null">Your subscription has been expired.</p>
+                <p>To renew your subscription, please contact <a href="mailto:omni@larvol.com">omni@larvol.com</a></p>
+            </div>
+            <div class="subscription-bg" *ngIf="!isLAPP && drugExpiredMsg">
+                <p>
+                    {{drugExpiredMsg}}.
+                </p>
+                <p>To renew your subscription, please contact <a href="mailto:omni@larvol.com">omni@larvol.com</a></p>
+            </div>
+        </div>
+    </div>
+    <div class="heading-sec">
+        <!-- <div class="heading-sec"> -->
+        <div class="container">
+            <span class="tab-list" [ngClass]="{'deselected' : selectedTab == 'drug' }" (click)="changeEntityTab('kol');gaKOLClicksTracking()">KOLs</span>
+            <span class="tab-list" [ngClass]="{'deselected' : selectedTab == 'kol' }" (click)="changeEntityTab('drug');gaDrugsClicksTracking()">Drugs</span>
+        </div>
+    </div>
+    <!-- KOl primium list section start -->
+    <div *ngIf="selectedTab == 'kol'">
+        <button (click)="slickModalTrending?.slickGoTo(0)" class="hide" id="slickModal" #slickModal></button>
+        <!-- grouping list sec start-->
+        <div class="grouping-list" *ngIf="isShowTabs">
+            <div class="container">
+                <!--scrollable sec start-->
+                <ngx-slick-carousel class="carousel slider-tab" #slickModalTrending="slick-carousel" [config]="slideConfig">
+                    <div ngxSlickItem class="tab" *ngFor="let item of teamsGroups" (click)="getSpecificKOlList(item);gaKolAnalysisTracking(item)" [ngClass]="{'active': clickedTab.id == item.id}">
+                        <a href="javascript:void(0);">{{item.name}}</a>
+                    </div>
+                </ngx-slick-carousel>
+                <!--scrollable sec end-->
+                <!--non-scrollable sec start-->
+                <!-- <ul *ngIf="teamsGroups.length <= 5">
+                    <li [ngClass]="{'active': clickedTab.id == item.id}" *ngFor="let item of teamsGroups"><a href="javascript:void(0);" (click)="getSpecificKOlList(item)">{{item.name}}</a></li>
+                </ul> -->
+                <!--non-scrollable sec end-->
+            </div>
+        </div>
+        <!-- grouping list sec end-->
+        <section class="sec-kols" *ngIf="kolsData?.length > 0 && isLoad && !isSpecificClick && !isAnalyticShow" infiniteScroll (scrolled)="onScroll($event)">
+            <div class="container">
+                <div class="kols-list">
+                    <div class="kols-block" *ngFor="let item of kolsData; let index = index; ">
+                        <div class="row">
+                            <div class="col-md-2 col-2" (click)="openKOLsDetail(item)">
+                                <div class="img-sec round" [class.img-loading]="!item?.imageLoad" [ngClass]="{'img-round-sec' : item?.kol_image_url == ''}">
+                                    <a href="javascript:void(0)">
+                                        <img [src]="item?.kol_image_url" (error)="checkImageExistorNot(item)" *ngIf="item?.kol_image_url" (load)="imageLoadSuccess(item)">
+                                        <span class="text-round" *ngIf="!item?.kol_image_url">{{item?.kol_short_name}}</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-md-8 col-8" (click)="openKOLsDetail(item)">
+                                <div class="info-sec">
+                                    <h3>
+                                        <a href="javascript:void(0)">{{item?.kol_full_name}}<span *ngIf="item?.kol_qualification && item?.kol_full_name">, </span>{{item?.kol_qualification}}</a>
+                                    </h3>
+                                    <p *ngFor="let list of item?.institutionsData; let ind = index;">
+                                        <span *ngIf="ind < 3">
+                                            {{list}}<span *ngIf="ind == 2 && item?.institutionsData.length > 3">...</span>
+                                        </span>
+                                        <!-- <span *ngIf="ind < 3">{{list?.name}}<span *ngIf="list?.name && list?.city">, </span>{{list?.city}}<span *ngIf="list?.state">, </span>{{list?.state}}<span *ngIf="list?.country">, </span>{{list?.country}}<span *ngIf="ind == 2">...</span></span> -->
+                                    </p>
+                                    <!-- <p *ngFor="let list of item?.kol_institutions; let ind = index;">
+                                        <span *ngIf="ind < 3">{{list?.name}}<span *ngIf="list?.name && list?.city">, </span>{{list?.city}}<span *ngIf="list?.state">, </span>{{list?.state}}<span *ngIf="list?.country">, </span>{{list?.country}}<span *ngIf="ind == 2">...</span></span>
+                                    </p> -->
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-2">
+                                <div class="badge-sec">
+                                    <span class="badge red-bg" *ngIf="item?.kol_notification_count > 0">
+                                        <span *ngIf="item?.kol_notification_count >= 1000">999+</span>
+                                    <span *ngIf="item?.kol_notification_count < 1000">{{item?.kol_notification_count}}</span>
+                                    </span>
+                                    <div class="grouping-fav">
+                                        <app-kols-star-view (changeData)="changeDataByUser($event)" [index]="index" [kolsData]="item" class="dashboard-fav"></app-kols-star-view>
+                                        <span class="group-icon groupPopup" (click)="openGroup(item.kol_id,item)">
+                                            <i class="fa fa-ellipsis-v groupPopup"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--group list start-->
+                        <div class="group-list-block groupPopup" *ngIf="showGroupPopup" [ngClass]="{'show': isGroupShowId == item.kol_id}">
+                            <div class="team-name-selected" *ngIf="kolTeams.length > 0">
+                                <ul>
+                                    <li *ngFor="let item of kolTeams">{{item.name}}</li>
+                                </ul>
+                            </div>
+
+                            <div class="team-name-selected" *ngIf="kolTeams.length <= 0">
+                                <ul>
+                                    <li>No teams found.</li>
+                                </ul>
+                            </div>
+                            <div class="team-name-list" *ngIf="kolGroups.length > 0">
+                                <ul class="filter-list">
+                                    <li *ngFor="let item of kolGroups">
+                                        <label class="checkbox-block groupPopup">
+                                            <input class="grouping groupPopup" type="checkbox" name={{item?.id}} [checked]="item.selected" (click)="addRemoveKolFromGroup(item, $event);gaGroupTrack(item,$event)">
+                                            <span class="checkmark groupPopup"></span>
+                                        </label>
+                                        <span class="grouping-text groupPopup">{{item.name}}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="team-name-list" *ngIf="kolGroups.length <= 0">
+                                <ul class="filter-list">
+                                    <li class="no-group">
+                                        <span class="grouping-text groupPopup">No groups found.</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="add-group-textbox groupPopup">
+                                <form [formGroup]="groupForm" class="groupPopup" novalidate>
+                                    <div class="form-group groupPopup">
+                                        <input type="text" class="form-control groupPopup" formControlName="groupName" placeholder="Add Group" onfocus="this.ph=this.placeholder;this.placeholder=''" onblur="this.placeholder = this.ph" (keyup)="resetMsgonKey()">
+                                    </div>
+                                    <button class="add-btn groupPopup" type="submit" [disabled]="groupForm.invalid" (click)="addGroup();gaGroupTrack(groupForm.value,$event)"><i class="fa fa-plus groupPopup"></i></button>
+                                    <span class="error" *ngIf="existsMsg"><strong>{{existsMsg}}</strong></span>
+                                </form>
+                            </div>
+                        </div>
+                        <!--group list end-->
+                    </div>
+                </div>
+                <div class="bouncing-loader" *ngIf="isLoadMore">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+        </section>
+        <section class="sec-kols kol-center" *ngIf="kolsData?.length == 0 && isLoad && !isSpecificClick && !isAnalyticShow">
+            <div class="container">
+                <div class="no-favourite-kols" *ngIf="!isLAPP">
+                    <div class="kols-list no-kols no-kols-content">
+                        <h4>Your subscription includes access to premium content for up to {{loggedUserData?.max_kols}} KOLs.
+                        </h4>
+                        <h4 class="no-selected-kol">
+                            Please Contact <a href="mailto:omni@larvol.com">omni@larvol.com</a> if you have any questions.​
+                        </h4>
+                    </div>
+                </div>
+                <div class="no-favourite-kols" *ngIf="isLAPP">
+                    <div class="kols-list no-kols no-kols-content">
+                        <h4 *ngIf="loggedUserData?.subscription && !loggedUserData?.created_by">Free users can access premium content for up to 3 KOLs. Use the search bar to find your KOLs and click
+                            <span class="favourite-icon selected"><i class="fa fa-star-o"></i></span> to access premium content.
+                        </h4>
+                        <h4 *ngIf="!loggedUserData?.subscription && !loggedUserData?.created_by">Free users can access premium content for up to 3 KOLs. Use the search bar to find your KOLs and click
+                            <span class="favourite-icon selected"><i class="fa fa-star-o"></i></span> to access premium content.
+                        </h4>
+                        <h4 *ngIf="loggedUserData?.subscription && loggedUserData?.created_by">You can access premium content for up to {{loggedUserData?.subscription}} KOLs. Use the search bar to find your KOLs and click
+                            <span class="favourite-icon selected"><i class="fa fa-star-o"></i></span> to access premium content.
+                        </h4>
+                        <h4 class="no-selected-kol">
+                            Contact <a href="mailto:omni@larvol.com">omni@larvol.com</a> to upgrade your subscription.
+                        </h4>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="sec-kols kol-center" *ngIf="kolsData?.length == 0 && isSpecificClick && isLoad && !isAnalyticShow">
+            <div class="container">
+                <div class="no-favourite-kols">
+                    <div class="kols-list no-kols no-kols-content" *ngIf="postObj.type == 'group'">
+                        <p>No KOLs were added to this Group.</p>
+                    </div>
+                    <div class="kols-list no-kols no-kols-content" *ngIf="postObj.type == 'team'">
+                        <p>No KOLs were added to this Team.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section *ngIf="isAnalyticShow">
+            <div class="container">
+                <app-kol-analytics></app-kol-analytics>
+            </div>
+        </section>
+    </div>
+    <!-- KOl primium list section end -->
+
+    <!-- Drug primium list section start -->
+    <app-drug-landing-page *ngIf="selectedTab == 'drug'"></app-drug-landing-page>
+    <!-- Drug primium list section end -->
+</div>

@@ -1,0 +1,317 @@
+<div class="breadcrumbs-sec">
+    <div class="container">
+        <ul class="breadcrubs-list">
+            <li>
+                <a href="javascript:void(0)" title="Drugs" (click)="redirectOnLandingPage()">Drugs</a>
+            </li>
+            <li>
+                <a href="javascript:void(0)" class="active" title="{{ProductData?.name}}">{{ProductData?.name}}</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="sec-kols" (window:scroll)="onWindowScroll($event)" (window:resize)="onResize($event)">
+    <div class="container no-padding" infiniteScroll (scrolled)="onScroll($event)">
+        <div class="kols-list">
+            <div class="kols-detail">
+                <div class="kols-info" id="kolInfo" #kolInfo>
+                    <div class="row">
+                        <div class="col-md-11 col-10">
+                            <div class="info-sec" (click)="ExpandDetailView()">
+                                <h3>
+                                    <strong>Company: </strong>
+                                    <div class="content-right">
+                                        <span *ngIf="ProductData?.product_institutions?.length == 0">Not applicable</span>
+                                        <span *ngIf="ProductData?.product_institutions?.length > 0">
+                                            <span
+                                                *ngFor="let company of ProductData?.product_institutions; let last = last; "
+                                                class="moa-info">{{company?.name}}<span *ngIf="!last" class="last-tag">,
+                                                </span></span>
+                                        </span>
+                                    </div>
+                                </h3>
+                                <h3>
+                                    <strong>MOA: </strong>
+                                    <!-- <span>VEGF inhibitor; Angiogenesis inhibitor</span> -->
+                                    <div class="content-right">
+                                        <span *ngIf="ProductData?.moas_cols?.length == 0">Not applicable<span
+                                                *ngIf="!showDetail" class="load-more"> ...</span></span>
+                                        <span *ngIf="ProductData?.moas_cols?.length > 0">
+                                            <span *ngFor="let moa of ProductData?.moas_cols; let last = last; "
+                                                class="moa-info">
+                                                {{moa?.name}}<span *ngIf="!last" class="last-tag">, </span>
+                                        <span *ngIf="last && !showDetail" class="last-tag load-more"> ...</span>
+                                        </span>
+                                        </span>
+                                    </div>
+                                </h3>
+                                <h3 *ngIf="showDetail">
+                                    <strong>Status: </strong>
+                                    <div class="content-right">
+                                        <span>
+                                            <ul class="drug-list">
+                                                <li>
+                                                    <strong>Marketed: </strong>
+                                                    <span *ngIf="ProductData?.phase?.marketed">
+                                                        {{ProductData?.phase?.marketed}}
+                                                    </span>
+                                        <span *ngIf="!ProductData?.phase?.marketed">
+                                                        Not applicable
+                                                    </span>
+                                        </li>
+                                        <li>
+                                            <strong>Filed: </strong>
+                                            <span *ngIf="ProductData?.phase?.filed">
+                                                        {{ProductData?.phase?.filed}}
+                                                    </span>
+                                            <span *ngIf="!ProductData?.phase?.filed">
+                                                        Not applicable
+                                                    </span>
+                                        </li>
+                                        <li>
+                                            <strong>Phase 3: </strong>
+                                            <span *ngIf="ProductData?.phase?.phase_3">
+                                                        {{ProductData?.phase?.phase_3}}
+                                                    </span>
+                                            <span *ngIf="!ProductData?.phase?.phase_3">
+                                                        Not applicable
+                                                    </span>
+                                        </li>
+                                        <li>
+                                            <strong>Phase 2: </strong>
+                                            <span *ngIf="ProductData?.phase?.phase_2">
+                                                        {{ProductData?.phase?.phase_2}}
+                                                    </span>
+                                            <span *ngIf="!ProductData?.phase?.phase_2">
+                                                        Not applicable
+                                                    </span>
+                                        </li>
+                                        <li>
+                                            <strong>Phase 1: </strong>
+                                            <span *ngIf="ProductData?.phase?.phase_1">
+                                                       {{ProductData?.phase?.phase_1}}
+                                                    </span>
+                                            <span *ngIf="!ProductData?.phase?.phase_1">
+                                                        Not applicable
+                                                    </span>
+                                        </li>
+                                        <li *ngIf="discontinuedStatus">
+                                            <strong>{{discontinuedStatus}}: </strong>
+                                            <span *ngIf="discontinuedAreas">
+                                                {{discontinuedAreas}}
+                                            </span>
+                                            <span *ngIf="!discontinuedAreas">
+                                                Not applicable
+                                            </span>
+                                        </li>
+                                        </ul>
+                                        </span>
+                                    </div>
+                                </h3>
+                                <h3 *ngIf="showDetail">
+                                    <strong>Type: </strong>
+                                    <div class="content-right">
+                                        <span *ngIf="!ProductData?.product_type">Not applicable</span>
+                                        <span *ngIf="ProductData?.product_type">
+                                            {{ProductData?.product_type}}
+                                        </span>
+                                    </div>
+                                </h3>
+                                <h3 *ngIf="showDetail">
+                                    <strong>Route: </strong>
+                                    <div class="content-right">
+                                        <span *ngIf="ProductData?.formulations_cols?.length == 0">Not applicable</span>
+                                        <span *ngIf="ProductData?.formulations_cols?.length > 0">
+                                            <span
+                                                *ngFor="let route of ProductData?.formulations_cols; let last = last; "
+                                                class="moa-info">{{route?.type}}<span *ngIf="!last" class="last-tag">,
+                                                </span></span>
+                                        </span>
+                                    </div>
+                                </h3>
+                                <h3 *ngIf="showDetail">
+                                    <strong>Other names: </strong>
+                                    <div class="content-right">
+                                        <span *ngIf="ProductData?.code_names_cols?.length == 0">Not applicable</span>
+                                        <span *ngIf="ProductData?.code_names_cols?.length > 0">
+                                            <span *ngFor="let code of ProductData?.code_names_cols; let last = last; "
+                                                class="moa-info">{{getCodeName(code?.name)}}<span *ngIf="!last" class="last-tag">,
+                                                </span></span>
+                                        </span>
+                                    </div>
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="col-md-1 col-2">
+                            <div class="badge-sec entity-badge">
+                                <app-drug-star-view (changeData)="changeDataByUser($event)" [productData]="ProductData" class="dashboard-fav drug-favourite" *ngIf="isFShow">
+                                </app-drug-star-view>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tabbing-sec">
+                    <mat-tab-group (selectedTabChange)="changeTabsData($event)" [(selectedIndex)]="selectedTab">
+                        <!-- first tab start -->
+                        <mat-tab label="News" class="active">
+                            <ng-template matTabContent>
+                                <div class="tab-content" [ngClass]="{'isContent': newsData?.length > 0, 'NoContent': newsData?.length <= 0}">
+                                    <div class="has-content" *ngIf="newsData?.length > 0 && isNewsPageLoad && isPageLoad">
+                                        <div class="news-block" *ngFor="let item of newsData" id="news_{{item?.id}}" [ngClass]="{'new-notification' : item.read_status == 0}">
+                                            <h4>
+                                                <a href="{{item?.url}}" target="{{item?.target}}" (click)="changeNewsReadStatus(item);gaVisitedLinks(item?.id)">
+                                                    <span class="item-title"><strong [innerHTML]="item?.title"></strong>
+                                                    <span *ngIf="item?.news_sources?.length > 0">
+                                                        ({{item?.news_sources[0]?.display_name}})</span></span>
+                                                </a>
+                                                <a href="javascript:void(0)" class="normal-text">
+                                                    <span class="item-description" *ngIf="item?.summary" [innerHTML]="item?.summary"></span>
+                                                    <span class="tag-list">
+                                                    <span class="font-purple"
+                                                        *ngFor="let topic of item?.news_topics;let last = last">
+                                                        {{topic?.tag}}
+                                                        <span *ngIf="!last" class="last-tag">
+                                                            <!----></span>
+                                                    </span>
+                                                    <span class="font-purple" *ngFor="let product of item?.news_products;let last = last">
+                                                        <!-- {{product?.name}} -->
+                                                        {{getProductName(product?.name)}}
+                                                        <span *ngIf="!last" class="last-tag">
+                                                            <!----></span>
+                                                    </span>
+                                                    <span class="font-purple" *ngFor="let institute of item?.companies;let last = last">
+                                                        {{institute?.name}}
+                                                        <span *ngIf="!last" class="last-tag">
+                                                            <!----></span>
+                                                    </span>
+                                                    </span>
+                                                </a>
+                                                <!--bookmark icon start-->
+                                                <span class="icon-bookmark" title="{{getTooltipData(item)}}" (click)="addNewsItemToBookmark(item);gaDrugsBookmarks(item,'News')"><i class="fa"
+                                                    [ngClass]="{'fa-bookmark' : item?.is_bookmark == true, 'fa-bookmark-o' : item?.is_bookmark == false}"></i></span>
+                                                <!--bookmark icon end-->
+                                            </h4>
+                                            <span class="img-sec" *ngIf="item?.images?.original?.length > 0">
+                                            <img [src]="item?.images?.original[0]" alt="image"
+                                                (click)="showPopup(item)">
+                                        </span>
+                                            <span class="posted-time" *ngIf="item?.display_date">{{item?.display_date | timeAgo}}</span>
+                                            <app-news-social-features [item]="item" [settingsData]="newsSettingsData" [allUserList]="allUserList" [productId]="productId">
+                                            </app-news-social-features>
+                                        </div>
+                                        <div class="bouncing-loader" *ngIf="isNewsLoad">
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                        </div>
+                                    </div>
+                                    <div class="no-content" *ngIf="newsData?.length == 0 && isNewsPageLoad && isPageLoad">
+                                        <h3>No News</h3>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </mat-tab>
+                        <mat-tab label="Tweets" *ngIf="!isTweetsShow">
+                            <ng-template matTabContent>
+                                <div class="tab-content" [ngClass]="{'isContent': twittersData?.length > 0, 'NoContent': twittersData?.length <= 0}">
+                                    <div class="has-content" *ngIf="twittersData?.length > 0">
+                                        <div class="news-block" *ngFor="let item of twittersData; let index = index;" id="tweets_{{item?.id}}" [ngClass]="{'new-notification' : item.read_status == 0}">
+                                            <h4>
+                                                <a href="{{item?.url}}" target="{{item?.target}}" (click)="changeNewsReadStatus(item);;gaVisitedLinks(item?.id)">
+                                                    <span class="item-title">
+                                                      <strong [innerHTML]="item?.title"></strong>
+                                                    <!-- <span *ngIf="item?.news_sources?.length > 0">
+                                                        ({{item?.news_sources[0]?.display_name}})</span> -->
+                                                    <span *ngIf="item?.source"> ({{item?.source}})</span>
+                                                    </span>
+                                                </a>
+                                                <a href="javascript:void(0)" class="normal-text">
+                                                    <span class="tag-list">
+                                                    <span class="font-purple"
+                                                        *ngFor="let topic of item?.news_topics;let last = last">
+                                                        {{topic?.tag}}
+                                                        <span *ngIf="!last">
+                                                            <!----></span>
+                                                    </span>
+                                                    <span class="font-purple" *ngFor="let product of item?.news_products;let last = last">
+                                                        {{getProductName(product?.name)}}
+                                                    </span>
+                                                    <span class="font-purple" *ngFor="let institute of item?.companies;let last = last">
+                                                        {{institute?.name}}
+                                                        <span *ngIf="!last" class="last-tag">
+                                                            <!----></span>
+                                                    </span>
+                                                    </span>
+                                                </a>
+                                                <!--bookmark sec start-->
+                                                <span class="icon-bookmark" title="{{getTooltipData(item)}}" (click)="addNewsItemToBookmark(item);gaDrugsBookmarks(item,'Tweets')"><i class="fa"
+                                                    [ngClass]="{'fa-bookmark' : item?.is_bookmark == true, 'fa-bookmark-o' : item?.is_bookmark == false}"></i></span>
+                                                <!--bookmark sec end-->
+                                            </h4>
+                                            <span class="img-sec" *ngIf="item?.images?.original?.length > 0">
+                                            <img [src]="item?.images?.original[0]" alt="image"
+                                                (click)="showPopup(item)">
+                                        </span>
+                                            <span class="posted-time" *ngIf="item?.display_date">{{item?.display_date | timeAgo}}</span>
+                                            <app-news-social-features [item]="item" [settingsData]="twittersSettingsData" [productId]="productId" [allUserList]="allUserList">
+                                            </app-news-social-features>
+                                        </div>
+                                        <div class="bouncing-loader" *ngIf="isTweetsLoad">
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                        </div>
+                                    </div>
+                                    <div class="no-content" *ngIf="twittersData?.length == 0 && isTweetsPageLoad">
+                                        <h3>No Tweets</h3>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </mat-tab>
+                        <mat-tab label="Trials">
+                            <ng-template matTabContent>
+                                <div class="tab-content">
+                                    <div class="has-content" *ngIf="trialsData?.length > 0 && isPageLoad && isNewsPageLoad">
+                                        <div class="news-block trial-block" *ngFor="let item of trialsData">
+                                            <h4>
+                                                <a href="javascript:void(0)" (click)="openTrialRelatedNews(item);gaVisitedLinks(item?.id)">
+                                                    <strong>
+                                                    <span *ngIf="item?.acronym">{{item?.acronym}}:</span>
+                                                    <span [innerHTML]="item?.brief_title | trimstr : 180"></span></strong>
+                                                </a>
+                                                <!--bookmark sec start-->
+                                                <span class="icon-bookmark trial-book" (click)="addTrialsToBookmark(item);gaDrugsBookmarks(item,'Trials')" title="{{getTooltipDataForTrail(item)}}"><i class="fa"
+                                                    [ngClass]="{'fa-bookmark' : item?.is_bookmarked  == true, 'fa-bookmark-o' : item?.is_bookmarked == false}"></i></span>
+                                                <!--bookmark sec end-->
+                                            </h4>
+                                            <ul class="trial-list">
+                                                <li *ngIf="item?.phase == 'N/A'">P={{item?.phase}}</li>
+                                                <li *ngIf="item?.phase != 'N/A'">P{{item?.phase}}</li>
+                                                <li *ngIf="item?.lead_sponsor" [innerHTML]="item?.lead_sponsor"></li>
+                                                <li *ngIf="item?.enrollment">Enrollment: {{item?.enrollment}}</li>
+                                                <li *ngIf="item?.overall_status">{{item?.overall_status}}</li>
+                                            </ul>
+                                        </div>
+                                        <div class="bouncing-loader" *ngIf="isTrailsLoad">
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                        </div>
+                                    </div>
+                                    <div class="no-content" *ngIf="trialsData?.length == 0 && isPageLoad && isNewsPageLoad">
+                                        <h3>No Trials</h3>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </mat-tab>
+                    </mat-tab-group>
+                    <!-- <div class="note-icon">
+                        <span>
+                            <i class="fa fa-pencil-square-o"></i>
+                        </span>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

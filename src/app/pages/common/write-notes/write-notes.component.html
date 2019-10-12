@@ -1,0 +1,49 @@
+<div class="breadcrumbs-sec">
+    <div class="container">
+        <ul class="breadcrubs-list previous-page">
+            <li (click)="goBack()">
+                <a href="javascript:void(0)" title="Back to previous page">Back to previous page</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="sec-kols">
+    <div class="container">
+        <div class="kols-list sec-write-note">
+            <div class="notes-container">
+                <form [formGroup]="noteForm" novalidate>
+                    <div class="form-group">
+                        <textarea onfocus="this.ph=this.placeholder;this.placeholder=''" onblur="this.placeholder = this.ph" placeholder="{{placeholder}}" class="form-control" rows="6" maxlength="{{contentLength}}" formControlName="content" name="notes" [(ngModel)]="noteText"
+                            [ngClass]="{'errors': noteForm.controls.content.errors?.required && noteForm.controls.content.touched == true}"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <ul class="btn-list list-inline">
+                            <li>
+                                <button class="btn btn-primary btn-cancel" type="button" title="Cancel" (click)="cancelClick()">Cancel</button>
+                            </li>
+                            <li>
+                                <button class="btn btn-primary" type="submit" title="Add Note" (click)="saveNote()" [disabled]="!noteForm.valid">
+                                    <span>Add Note</span>
+                                </button>
+                            </li>
+                            <li><span>Characters left: {{getReamaningLength()}}</span></li>
+                        </ul>
+                    </div>
+                </form>
+                <div class="notes-list" *ngIf="allNoteList?.length > 0">
+                    <div class="notes-block" *ngFor="let note of allNoteList; let index = index; ">
+                        <ul>
+                            <li>
+                                <span class="date">{{ note?.updated_at | dateformat : 'MM/DD/YYYY' }}</span>
+                                <span class="date edit-text" *ngIf="note.updated_at != note.created_at">&nbsp;{{editText}}</span>
+                            </li>
+                            <li><span class="edit" (click)="editNotes(note)"><i class="fa fa-pencil"></i></span></li>
+                            <li><span class="delete" (click)="deleteNotes(note)"><i class="fa fa-trash-o"></i></span></li>
+                        </ul>
+                        <p>{{ note?.content }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

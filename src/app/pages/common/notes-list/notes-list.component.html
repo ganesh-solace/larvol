@@ -1,0 +1,87 @@
+<div class="breadcrumbs-sec">
+    <div class="container">
+        <ul class="breadcrubs-list previous-page">
+            <li (click)="goBack()">
+                <a href="javascript:void(0)" title="Back to previous page">Back to previous page</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="sec-kols">
+    <div class="container">
+        <div class="kols-list notes-list" *ngIf="isDataLoad" infiniteScroll (scrolled)="onScroll($event)">
+            <h2>Notes</h2>
+            <div class="notes-section-table table-resposive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>
+                                <span class="column-sort-header" (click)="sortColumnData('date')">
+                                    Date
+                                    <span class="sort-icon" *ngIf="sortData?.type == '' || sortData?.type == 'name'">
+                                        <i class="fa fa-sort icon" aria-hidden="true"></i>
+                                    </span>
+                                <span *ngIf="sortData?.type == 'date'" class="single-sort-icon">
+                                        <i *ngIf="sortData?.sortBy == 'asc'" class="fa fa-sort-asc" aria-hidden="true"></i>
+                                        <i *ngIf="sortData?.sortBy == 'desc'" class="fa fa-sort-desc" aria-hidden="true"></i>
+                                    </span>
+                                </span>
+                            </th>
+                            <th>
+                                <span class="column-sort-header" (click)="sortColumnData('name')">
+                                    Name
+                                    <span class="sort-icon" *ngIf="sortData?.type == '' || sortData?.type == 'date'">
+                                        <i class="fa fa-sort icon" aria-hidden="true"></i>
+                                    </span>
+                                <span *ngIf="sortData?.type == 'name'" class="single-sort-icon">
+                                        <i *ngIf="sortData?.sortBy == 'asc'" class="fa fa-sort-asc" aria-hidden="true"></i>
+                                        <i *ngIf="sortData?.sortBy == 'desc'" class="fa fa-sort-desc" aria-hidden="true"></i>
+                                    </span>
+                                </span>
+                            </th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody *ngIf="notesList?.length > 0">
+                        <tr (click)="editNotes(item)" *ngFor="let item of notesList">
+                            <td>{{item?.updated_at | dateformat : 'MM/DD/YYYY'}}</td>
+                            <td>{{item?.title}}</td>
+                            <td>{{item?.content | trimstr: 100}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="bouncing-loader" *ngIf="isLoadMore">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+        </div>
+        <!-- <div *ngIf="notesList?.length > 0" class="custom_table padding-0">
+            <div infiniteScroll (scrolled)="onScrollDown($event)">
+                <data-table id="my-table" [title]="'Notes'" [items]="notesList" (rowClick)="editNotes($event)" [pagination]="false" [indexColumn]="false" [showReloading]="false">
+                    <data-table-column [property]="'date'" [header]="'Date'" [sortable]="true">
+                        <ng-template #dataTableCell let-item="item">
+                            <span>{{ item.updated_at | date:'MM/dd/yyyy':'+0530' }}</span>
+                        </ng-template>
+                    </data-table-column>
+                    <data-table-column [property]="'name'" [header]="'Name'" [sortable]="true">
+                        <ng-template #dataTableCell let-item="item">
+                            <span>{{ item.title}}</span>
+                        </ng-template>
+                    </data-table-column>
+                    <data-table-column [property]="'content'" [header]="'Description'" [sortable]="false">
+                        <ng-template #dataTableCell let-item="item">
+                            <span>{{ item.content | trimstr: 100 }}</span>
+                        </ng-template>
+                    </data-table-column>
+                </data-table>
+            </div>
+        </div> -->
+        <div class="kols-list no-kols" *ngIf="notesList?.length == 0 && isPageLoad">
+            <div class="no-kols-sec">
+                <h3>No Notes</h3>
+            </div>
+        </div>
+    </div>
+</div>

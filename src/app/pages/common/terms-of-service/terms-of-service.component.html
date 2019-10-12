@@ -1,0 +1,57 @@
+<app-header></app-header>
+<div class="breadcrumbs-sec">
+    <div class="container">
+        <ul class="breadcrubs-list previous-page">
+            <li (click)="goBack()">
+                <a href="javascript:void(0)" title="{{backTitle}}">{{backTitle}}</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<section class="sec-kols">
+    <div class="container">
+        <div class="kols-list" [innerHTML]="termsData"></div>
+        <!-- <div class="kols-list">
+            <p>Please read these terms and conditions carefully before using the Larvol web application, Omni (the "service"), operated by The Larvol Group, LLC ("us", 'we", "our").</p>
+            <p>
+                <strong>Conditions of Use</strong>
+            </p>
+            <p>We will provide the service to you, which are subject to the conditions stated below in this document. Every time you use its services or make a purchase, you accept the following conditions. This is why we urge you to read them carefully.</p>
+            <p>
+                <strong>Privacy Policy</strong>
+            </p>
+            <p>Before you continue using the service we advise you to read our
+                <a href="javascript:void(0)" class="font-purple" [routerLink]="['/privacy-policy']">privacy policy</a> regarding our user data collection. It will help you better understand our practices.</p>
+            <p>
+                <strong>Copyright</strong>
+            </p>
+            <p>Content published on the service is the property of its content creators and protected by international copyright laws.</p>
+            <p>
+                <strong>Communications</strong>
+            </p>
+            <p>By using the service, you consent to receive communications from us. We may continue to communicate with you by posting messages using the service and by sending you emails. You also agree that all notices, disclosures, agreements and other communications we provide to you electronically meet the legal requirements that such communications be in writing.</p>
+            <p>
+                <strong>Applicable Law</strong>
+            </p>
+            <p>By using the service, you agree that the laws of the state of California and the United States of America, without regard to principles of conflict laws, will govern these terms and conditions, or any dispute of any sort that might come between Larvol and you, or its business partners and associates.</p>
+            <p>
+                <strong>Disputes</strong>
+            </p>
+            <p>Any dispute related in any way to your use of this service shall be arbitrated by state or federal court in California and the United States of America and you consent to exclusive jurisdiction and venue of such courts.</p>
+            <p>
+                <strong>Comments, Reviews, and Emails</strong>
+            </p>
+            <p>Visitors may post content as long as it is not obscene, illegal, defamatory, threatening, infringing of intellectual property rights, invasive of privacy or injurious in any other way to third parties. Content has to be free of software viruses, political campaign, and commercial solicitation.</p>
+            <p>We reserve all rights (but not the obligation) to remove and/or edit such content.</p>
+            <p>
+                <strong>License and Site Access</strong>
+            </p>
+            <p>We grant you a limited license to access and make personal use of this service. You are not allowed to modify it in anyway. This may be done only with written consent from us.</p>
+            <p>
+                <strong>User Account</strong>
+            </p>
+            <p>If you are an owner of an account on this service, you are solely responsible for maintaining the confidentiality of your private user details (username and password). You are responsible for all activities that occur under your account or password.</p>
+            <p>We reserve all rights to terminate accounts, edit or remove content and cancel orders at our sole discretion.</p>
+        </div> -->
+    </div>
+</section>

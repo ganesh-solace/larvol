@@ -1,0 +1,141 @@
+<div class="breadcrumbs-sec">
+    <div class="container">
+        <ul class="breadcrubs-list">
+            <li>
+                <a href="javascript:void(0)" title="Home" [routerLink]="['']">Home</a>
+            </li>
+            <li>
+                <a href="javascript:void(0)" title="Advanced Search" class="active">Advanced Search</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<section class="sec-kols">
+    <div class="container">
+        <div class="kols-list advanced-search-list">
+            <div class="advanced-search-form">
+                <p>Please select your search criteria using one or more of the fields below:</p>
+                <form>
+                    <div class="form-group">
+                        <mat-form-field class="example-full-width">
+                            <input matInput type="text" placeholder="Name" class="form-control" [(ngModel)]="name" name="name">
+                            <!-- <span class="error">*Enter Name.​</span>                                     -->
+                        </mat-form-field>
+                    </div>
+                    <div class="form-group pos-rel">
+                        <mat-form-field class="example-full-width">
+                            <input id="searchInstitute" matInput type="text" placeholder="Institution" class="form-control institute" [(ngModel)]="institute" name="institute" (focus)="onFocusInInstitution($event)">
+                            <!-- <span class="error">*Enter Institution Name.​</span>                                     -->
+                            <span class="icon" *ngIf="isInstitute" (click)="closeInstitution()"><i class="fa fa-times"></i></span>
+                        </mat-form-field>
+                        <div class="suggestion-list" *ngIf="showInstitue" id="instituteList" #instituteList>    
+                            <ul *ngIf="allInstituteList?.length > 0" 
+                                infiniteScroll      
+                                (scrolled)="onScroll($event)"
+                                [scrollWindow]="false"
+                            >
+                                <li *ngFor="let item of allInstituteList">
+                                    <span (click)="selectInstitution(item)">{{item?.display_name}}</span>
+                                </li>
+                            </ul>
+                            <div class="section-middle no-result-found-wrapper" *ngIf="allInstituteList?.length == 0 && !instituteLoad">
+                                <p class="no-result" *ngIf="institute?.length >= 3">No Result Found.</p>
+                            </div>
+                            <div *ngIf="instituteLoad">
+                                <div class="bouncing-loader">
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group pos-rel">
+                        <mat-form-field class="example-full-width">
+                            <input id="searchArea" matInput type="text" placeholder="Area" class="form-control area" [(ngModel)]="area" name="area" (focus)="onFocusInArea($event)">
+                            <span class="icon" *ngIf="isArea" (click)="closeArea()"><i class="fa fa-times"></i></span>
+                        </mat-form-field>
+                        <div class="suggestion-list" *ngIf="showArea">
+                            <ul *ngIf="allAreaList?.length > 0 && !areaLoad"
+                                infiniteScroll      
+                                (scrolled)="onAreaScroll($event)"
+                                [scrollWindow]="false"    
+                            >
+                                <li *ngFor="let item of allAreaList">
+                                    <span (click)="selectArea(item)">{{item?.name}}</span>
+                                </li>
+                            </ul>                            
+                            <div class="section-middle no-result-found-wrapper" *ngIf="allAreaList?.length == 0 && !areaLoad">
+                                <p class="no-result" *ngIf="area?.length >= 3">No Result Found.</p>
+                            </div>
+                            <div *ngIf="areaLoad">
+                                <div class="bouncing-loader">
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="form-group pos-rel">
+                        <mat-form-field class="example-full-width">
+                            <input id="searchState" matInput type="text" placeholder="State" class="form-control state" [(ngModel)]="state" name="state" (focus)="onFocusInState($event)">
+                            <span class="icon" *ngIf="isState" (click)="closeState()"><i class="fa fa-times"></i></span>
+                        </mat-form-field>
+                        <div class="suggestion-list" *ngIf="showState">
+                            <ul *ngIf="allStateList?.length > 0 && !stateLoad">
+                                <li *ngFor="let item of allStateList">
+                                    <span (click)="selectState(item)">{{item?.state}}</span>
+                                </li>
+                            </ul>                            
+                            <div class="section-middle no-result-found-wrapper" *ngIf="allStateList?.length == 0 && !stateLoad">
+                                <p class="no-result" *ngIf="state?.length >= 3">No Result Found.</p>
+                            </div>
+                            <div *ngIf="stateLoad">
+                                <div class="bouncing-loader">
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+                    <!-- <div class="form-group pos-rel">
+                        <mat-form-field class="example-full-width">
+                            <input id="searchCountry" matInput type="text" placeholder="Country" class="form-control country" [(ngModel)]="country" name="country" (focus)="onFocusInCountry($event)">
+                            <span class="icon" *ngIf="isCountry" (click)="closeCountry()"><i class="fa fa-times"></i></span>
+                        </mat-form-field>
+                        <div class="suggestion-list" *ngIf="showCountry">
+                            <ul *ngIf="allCountryList?.length > 0 && !countryLoad">
+                                <li *ngFor="let item of allCountryList">
+                                    <span (click)="selectCountry(item)">{{item?.country}}</span>
+                                </li>
+                            </ul>
+                            <div class="section-middle no-result-found-wrapper" *ngIf="allCountryList?.length == 0 && !countryLoad">
+                                <p class="no-result" *ngIf="country?.length >= 3">No Result Found.</p>
+                            </div>
+                            <div *ngIf="countryLoad">
+                                <div class="bouncing-loader">
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+                    <div class="btn-group">
+                        <ul>
+                            <li>
+                                <button  class="btn btn-primary" title="Clear" type="reset" (click)="clearSearchData()">Clear</button>
+                            </li>
+                            <li>
+                                <button  class="btn btn-primary" title="Search" type="submit" (click)="doAdvancedSearch()">Search</button>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>

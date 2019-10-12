@@ -1,0 +1,57 @@
+<div class="modal-header">
+    <h4 class="modal-title"> </h4>
+    <button type="button" class="close" data-dismiss="modal" (click)="closeModal()">
+        <span>
+            <img src="./assets/images/cancel.png" alt="cancel img">
+        </span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="border-bottom">
+        <p>{{title | trimstr:'150'}}</p>
+    </div>
+    <div class="share-sec">
+        <p>Share via</p>
+        <ul class="share-list">
+            <!-- <li>
+                <linkedin-share url={{fburl}}></linkedin-share>
+            </li>
+            <li>
+                <google-plus url={{fburl}}></google-plus>
+            </li> -->
+            <!-- <li>
+                <a href="mailto:?body={{href}}">Email</a>
+            </li> -->
+            <li>
+                <a href="https://www.linkedin.com/sharing/share-offsite/?url={{href}}" title="LinkedIn" target="_blank" class="share-icon linkedin">
+                    <i class="fa fa-linkedin"></i>
+                </a>
+            </li>
+            <li>
+                <a href="https://twitter.com/intent/tweet?url={{href}}&original_referer={{original_referer}}" title="Twitter" target="_blank" class="share-icon twitter">
+                    <i class="fa fa-twitter"></i>
+                </a>
+            </li>
+            <li>
+                <a href="https://www.facebook.com/sharer/sharer.php?u={{href}}" title="Facebook" target="_blank" class="share-icon facebook">
+                    <i class="fa fa-facebook"></i>
+                </a>
+            </li>
+            <!-- <li>
+                <a href="https://plus.google.com/share?app=110&url={{href}}" title="Google Plus" target="_blank" class="share-icon google">
+                    <i class="fa fa-google-plus"></i>
+                </a>
+            </li> -->
+            <li>
+                <a data-rel="external" href="mailto:?body={{mailBody}}" title="Email" class="google" (click)="clickOnEmailShare()">
+                    <i class="fa fa-envelope"></i>
+                </a>                
+            </li>
+            <li>
+                <a href="javascript:void(0)" (click)="copyToClipboard(href)" title="Copy To Clipboard" class="share-icon share">
+                    <i class="fa fa-link"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

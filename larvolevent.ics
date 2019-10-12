@@ -1,0 +1,16 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//LearnPHP.co//NONSGML Lessons For The Front Line: How to Reduce Performance Variation In Chronic Heart Failure Management//EN
+X-PUBLISHED-TTL:PT12H
+X-ORIGINAL-URL:/events/
+BEGIN:VEVENT
+UID:20190228T011089-2137177803-learnphp.co
+DTSTAMP:20190228T011047
+DTSTART:20190601T041000Z
+DTEND:20190807T041000Z
+LOCATION:Ahmedabad
+SUMMARY:Lessons For The Front Line: How to Reduce Performance Variation In Chronic Heart Failure Management
+DESCRIPTION: Lessons For The Front Line: How to Reduce Performance Variation In Chronic Heart Failure Management
+END:VEVENT
+
+END:VCALENDAR

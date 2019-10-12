@@ -1,0 +1,206 @@
+<div class="background-overlay" (click)="closePage()">
+<div class="kol-search-sec" (click)="clickSearchPage()">
+	<div class="kol-search-list">
+
+		<!-- screen #1 default-data-start-->
+		<!-- <div class="search-heading border-bttm" (click)="clickOnAdvanceSearch();" *ngIf="!ifAdvancedSearch && !searchText">
+			<span class="heading-text">Advanced Search</span>
+			<span class="clear-text"><i class="fa fa-search-plus"></i></span>
+		</div> -->
+		<div class="search-heading" *ngIf="!searchText && !ifAdvancedSearch">
+			<span class="heading-text">Recent Searches</span>
+			<span class="clear-text" (click)="clearAllRecentData()" *ngIf="recentSearchData?.length > 0">Clear</span>
+		</div>
+		<div class="kols-list" *ngIf="!searchText && !ifAdvancedSearch">
+			<div class="kols-block" *ngFor="let list of recentSearchData">
+				<div class="row" (click)="openRecentSearchKOl(list)">
+					<div class="col-md-1 col-1" (click)="searchTermGoogleAnalytics(list?.kol_fullname)">
+						<div class="img-sec img-sm round" [class.img-loading]="!list?.imageLoad" [ngClass]="{'img-round-sec' : list?.kol_image == ''}">
+							<a href="javascript:void(0)">
+								<img [src]="list?.kol_image" (error)="checkImageExistorNot(list)" *ngIf="list?.kol_image != ''" (load)="imageLoadSuccess(list)">
+								<span class="text-round" *ngIf="!list?.kol_image">{{list?.kol_short_name}}</span>
+							</a>
+						</div>
+					</div>
+					<div class="col-md-10 col-10" (click)="searchTermGoogleAnalytics(list?.kol_fullname)">
+						<div class="info-sec info-search">
+							<h3>
+								<a href="javascript:void(0)" *ngIf="list?.kol_fullname">{{list?.kol_fullname}}<span *ngIf="list?.qualification && list?.kol_fullname">, </span>{{list?.qualification}}</a>
+								<a href="javascript:void(0)" *ngIf="list?.search_text">{{list?.search_text}}</a>
+							</h3>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="kols-list" *ngIf="recentSearchData?.length == 0 && isRecentLoad">
+				<div class="bouncing-loader">
+					<div></div>
+					<div></div>
+					<div></div>
+				</div>
+			</div>
+		</div>
+		<!-- screen #1 default-data-end-->
+		<!--screen #4 screen-search-registered-user-start-->
+			<div class="kols-list" *ngIf="showData && kolsData?.length > 0">
+				<div class="kols-block" *ngFor="let item of kolsData">
+					<div class="row">
+						<div class="col-md-2 col-2" (click)="openKOLsDetail(item);searchTermGoogleAnalytics(item?.kol_full_name)">
+							<div class="img-sec round" [class.img-loading]="!item?.imageLoad" [ngClass]="{'img-round-sec' : item?.kol_image_url == ''}">
+								<a href="javascript:void(0)">
+									<img [src]="item?.kol_image_url" (error)="checkImageExistorNot(item)"  *ngIf="item?.kol_image_url" (load)="imageLoadSuccess(item)">
+									<span class="text-round" *ngIf="!item?.kol_image_url">{{item?.kol_short_name}}</span>
+								</a>
+							</div>
+						</div>
+						<div class="col-md-8 col-8" (click)="openKOLsDetail(item);searchTermGoogleAnalytics(item?.kol_full_name)">
+							<div class="info-sec">
+								<h3>
+									<a href="javascript:void(0)">{{item?.kol_full_name}}<span *ngIf="item?.kol_qualification && item?.kol_full_name">, {{item?.kol_qualification}}</span></a>
+								</h3>
+								<span *ngFor="let list of item?.institutionsData; let ind = index;">
+									<p *ngIf="ind < 3">
+										<span *ngIf="ind < 3">
+											{{list}}<span *ngIf="ind == 2 && item?.institutionsData.length > 3">...</span>
+										</span>
+										<!-- <span *ngIf="ind < 3">{{list?.name}}<span *ngIf="list?.name && list?.city">, </span>{{list?.city}}<span *ngIf="list?.state">, </span>{{list?.state}}<span *ngIf="list?.country">, </span>{{list?.country}}<span *ngIf="ind == 2">...</span></span> -->
+									</p>
+								</span>
+								<!-- <p *ngFor="let list of item?.kol_institutions; let ind = index;" [ngClass]="{'blank-content': ind > 0}">
+									<span *ngIf="ind < 1">{{list?.name}}<span *ngIf="list?.name && list?.city">, </span>{{list?.city}}<span *ngIf="list?.state">, </span>{{list?.state}}<span *ngIf="list?.country">, </span>{{list?.country}}<span *ngIf="ind == 1">...</span></span>
+								</p> -->
+							</div>
+						</div>
+						<div class="col-md-2 col-2">
+							<div class="badge-sec">
+								<span class="badge red-bg" *ngIf="item?.kol_notification_count > 0 && item?.favourite">
+									<span *ngIf="item?.kol_notification_count >= 1000">999+</span>
+									<span *ngIf="item?.kol_notification_count < 1000">{{item?.kol_notification_count}}</span>
+								</span>
+								<app-kols-star-view [kolsData]="item"></app-kols-star-view>
+							</div>
+						</div>
+					</div>
+				</div>				
+			</div>
+			<div class="kols-list no-kols" *ngIf="showData && kolsData?.length == 0 && !isLoad">
+				<div class="section-middle no-result-found-wrapper">
+					<div class="no-result" *ngIf="searchText?.length >= 3">
+						
+						
+							<!-- <div class="kols-list no-kols" *ngIf="kolsData?.length == 0 && isPageLoad && !advancedSearchData"> -->
+									<div class="no-kols-sec no-kol-content">
+										<!-- <h3>No Result Found.</h3> -->
+										<p>Please try with a different search term.
+											<br> Didn’t find what you were looking for?
+											<span>
+												<a href="javascript:void(0)" (click)="openPageUrl('/kol-request')">Let us know</a>
+											</span> and
+											<br> we’ll add the KOL you’re interested in. 
+										</p>
+									</div>
+								<!-- </div> -->
+						
+						
+						
+						
+						<!-- No Result Found. -->
+					</div>
+				</div>
+			</div>
+			<div class="kols-list" *ngIf="kolsData?.length == 0 && isLoad">
+				<div class="bouncing-loader">
+					<div></div>
+					<div></div>
+					<div></div>
+				</div>
+			</div>
+			<div class="search-bottom-section" *ngIf="showData">
+				<div class="get_all_result">
+					<p (click)="openSearchResultPage()">See all results for "{{searchText}}"</p>
+				</div>
+			</div>
+		<!-- advanced search screen start here-->
+			<div class="kols-list advanced-search-list" *ngIf="ifAdvancedSearch">
+				<div class="advanced-search-form">
+					<p>Please select your search criteria using one or more of the fields below:</p>
+					<form>
+						<div class="form-group">
+							<mat-form-field class="example-full-width">
+								<input matInput type="text" placeholder="Name *" class="form-control" [(ngModel)]="name" name="name">
+								<!-- <span class="error">*Enter Name.​</span>                                     -->
+							</mat-form-field>
+						</div>
+						<div class="form-group">
+							<mat-form-field class="example-full-width">
+								<input matInput type="text" placeholder="Institution*" class="form-control" (input)="showInstituteList()" [(ngModel)]="institute" name="institute">
+								<!-- <span class="error">*Enter Institution Name.​</span>                                     -->
+							</mat-form-field>
+							<div class="suggestion-list" *ngIf="showInstitue" id="instituteList" #instituteList>
+								<ul *ngIf="allInstituteList?.length > 0 && !instituteLoad" (scroll)="onInstituteScroll($event)">
+									<li *ngFor="let item of allInstituteList">
+										{{item?.display_name}}	
+									</li>
+								</ul>
+								<div class="section-middle no-result-found-wrapper" *ngIf="allInstituteList?.length == 0 && !instituteLoad">
+									<p class="no-result" *ngIf="institute?.length >= 3">No Result Found.</p>
+								</div>
+								<div *ngIf="instituteLoad">
+									<div class="bouncing-loader">
+										<div></div>
+										<div></div>
+										<div></div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<mat-form-field class="example-full-width">
+								<input matInput type="text" placeholder="State" class="form-control" (input)="showStateList()" [(ngModel)]="state" name="state">
+							</mat-form-field>
+							<div class="suggestion-list" *ngIf="showState">
+								<ul>
+									<li>Aurora</li>
+									<li>Kansas</li>
+									<li>Warrensburg</li>
+									<li>Knoxville</li>
+									<li>Aurora</li>
+									<li>Kansas</li>
+									<li>Warrensburg</li>
+									<li>Knoxville</li>
+								</ul>
+							</div>
+						</div>
+						<div class="form-group">
+							<mat-form-field class="example-full-width">
+								<input matInput type="text" placeholder="Country" class="form-control" (input)="showCountryList()" [(ngModel)]="country" name="country">
+							</mat-form-field>
+							<div class="suggestion-list" *ngIf="showCountry">
+								<ul>
+									<li>US</li>
+									<li>UK</li>
+									<li>Germany</li>
+									<li>Canada</li>
+									<li>UK</li>
+									<li>Germany</li>
+									<li>Canada</li>
+								</ul>
+							</div>
+						</div>
+						<div class="btn-group">
+							<ul>
+								<li>
+									<button  class="btn btn-primary" title="Clear" type="reset" (click)="ifAdvancedSearch = false">Clear</button>
+								</li>
+								<li>
+									<button  class="btn btn-primary" title="Search" type="submit">Search</button>
+								</li>
+							</ul>
+						</div>
+					</form>
+				</div>
+			</div>
+		<!--advanced search screen ends here-->
+	</div>
+</div>
+</div>

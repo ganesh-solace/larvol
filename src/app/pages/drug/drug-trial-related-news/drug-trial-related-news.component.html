@@ -1,0 +1,134 @@
+<div class="breadcrumbs-sec">
+    <div class="container">
+        <ul class="breadcrubs-list previous-page">
+            <li (click)="goBack()">
+                <a href="javascript:void(0)" title="Back to previous page">Back to previous page</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="sec-kols">
+    <div class="container">
+        <div class="kols-list">
+            <div class="trial-block">
+                <div class="trial-fixed-block" (window:scroll)="onWindowScroll($event)" id="drugInfo" #drugInfo>
+                    <h4>
+                        <a href="javascript:void(0)">
+                            <strong *ngIf="!isFullView">
+                                <span *ngIf="trailsData?.study_name">{{trailsData?.study_name}}:</span>
+                                <span (click)="openUrl(trailsData?.url)" [innerHTML]="trailsData?.brief_title | trimstr : 190"></span><span *ngIf="trailsData?.brief_title?.length > 180" (click)="expandDetailView()">...</span>
+                            </strong>
+                            <strong *ngIf="isFullView">
+                                <span *ngIf="trailsData?.study_name">{{trailsData?.study_name}}:</span>
+                                <span (click)="openUrl(trailsData?.url)" [innerHTML]="trailsData?.brief_title"></span>
+                            </strong>
+                        </a>
+                        <!-- bookmark sec start -->
+                        <span class="icon-bookmark" title="{{getTooltipDataForTrail(trailsData)}}" (click)="addTrialsToBookmark()">
+                            <i class="fa"
+                                [ngClass]="{'fa-bookmark' : trailsData?.is_bookmarked == true, 'fa-bookmark-o' : trailsData?.is_bookmarked == false}"></i>
+                        </span>
+                        <!-- bookmark sec end-->
+                    </h4>
+                    <ul class="trial-list trail-status-list">
+                        <li *ngIf="trailsData?.phase != 'N/A'">P{{trailsData?.phase}}<span class="separator">|</span></li>
+                        <li *ngIf="trailsData?.phase == 'N/A'">P={{trailsData?.phase}}<span class="separator">|</span></li>
+                        <li *ngIf="trailsData?.lead_sponsor" [innerHTML]="trailsData?.lead_sponsor"></li>
+                        <li *ngIf="trailsData?.enrollment"><span class="separator last-separator">|</span>Enrollment: {{trailsData?.enrollment}}<span class="separator">|</span></li>
+                        <li *ngIf="trailsData?.overall_status" [ngClass]="{'font-purple': trailsData?.overall_read_status == 0}"><span class="separator last-separator" *ngIf="!trailsData?.enrollment">|</span>{{trailsData?.overall_status}}</li>
+                    </ul>
+                    <ul class="trial-list">
+                        <li *ngIf="trailsData?.start_date">Initiation: {{trailsData?.start_date | dateformat : 'MM/DD/YYYY'}}<span class="separator">|</span></li>
+                        <li *ngIf="trailsData?.study_completion_date">Primary completion: {{trailsData?.study_completion_date | dateformat : 'MM/DD/YYYY'}}<span class="separator">|</span></li>
+                        <li *ngIf="trailsData?.primary_completion_date">Completion: {{trailsData?.primary_completion_date | dateformat : 'MM/DD/YYYY'}}</li>
+                    </ul>
+                </div>
+                <div *ngFor="let item of updatedNewsList" class="trail-update-list">
+                    <h5>
+                        <span class="span-list" *ngIf="item?.phase">{{item?.phase}}<span class="separator">|</span></span>
+                        <span class="span-list" *ngIf="item?.enrollment">{{item?.enrollment}}<span class="separator">|</span></span>
+                        <span class="span-list" *ngIf="item?.status">{{item?.status}}<span class="separator">|</span></span>
+                        <span class="span-list" *ngIf="item?.sponsor">{{item?.sponsor}}<span class="separator">|</span></span>
+                        <span [innerHTML]="getSummaryData(item?.summary)" class="span-list"></span>
+                    </h5>
+                    <div class="heading-list">
+                        <span class="font-purple change-heading" *ngFor="let topic of item?.news_topics;let last = last">
+                        {{topic?.tag}}
+                      </span>
+                        <span class="font-purple change-heading" *ngFor="let product of item?.news_products;let last = last">
+                          {{getProductName(product?.name)}}
+                      </span>
+                        <span class="font-purple change-heading" *ngFor="let area of item?.areas;let last = last">
+                          {{area?.name}}
+                      </span>
+                    </div>
+
+                    <h6>{{item?.display_date | timeAgo}}</h6>
+                </div>
+            </div>
+            <div class="has-content" *ngIf="newsData?.length > 0 && isPageLoad && isInfoLoad" infiniteScroll (scrolled)="onScroll($event)">
+                <div class="news-block" *ngFor="let item of newsData" id="news_{{item?.id}}" [ngClass]="{'new-notification' : item.product_news_read_status == 0}">
+                    <h4>
+                        <a href="{{item?.url}}" target="{{item?.target}}" (click)="item.product_news_read_status = 1">
+                            <span class="item-title"><strong [innerHTML]="item?.title"></strong> <span
+                                    *ngIf="item?.news_sources?.length > 0">
+                                    ({{item?.news_sources[0]?.display_name}})</span></span>
+                        </a>
+                        <a href="javascript:void(0)" class="normal-text">
+                            <span class="item-description" *ngIf="item?.summary" [innerHTML]="item?.summary"></span>
+                            <span class="tag-list">
+                                <span class="font-purple" *ngFor="let topic of item?.news_topics;let last = last">
+                                    {{topic?.tag}}
+                                    <span *ngIf="!last" class="last-tag">
+                                        <!----></span>
+                            </span>
+                            <span class="font-purple" *ngFor="let product of item?.news_products;let last = last">
+                                    {{getProductName(product?.name)}}
+                                    <span *ngIf="!last" class="last-tag">
+                                        <!----></span>
+                            </span>
+                            <span class="font-purple" *ngFor="let institute of item?.companies;let last = last">
+                                    {{institute?.name}}
+                                    <span *ngIf="!last" class="last-tag">
+                                        <!----></span>
+                            </span>
+                            </span>
+                        </a>
+                        <!--bookmark sec start-->
+                        <span class="icon-bookmark" title="{{getTooltipData(item)}}" (click)="addNewsItemToBookmark(item)"><i class="fa"
+                                [ngClass]="{'fa-bookmark' : item?.is_bookmark == true, 'fa-bookmark-o' : item?.is_bookmark == false}"></i></span>
+                        <!--bookmark sec end-->
+                    </h4>
+                    <h4 *ngIf="fromBookmark && item?.kols?.length > 0">
+                        <span class="tag-list">
+                            <span class="font-purple" *ngFor="let kol of item?.kols;let last = last">
+                                {{kol?.kapp_full_name}}
+                            </span>
+                        </span>
+                    </h4>
+                    <h4 *ngIf="item?.products?.length > 0 && fromBookmark">
+                        <span class="tag-list">
+                            <span class="font-purple" *ngFor="let product of item?.products;let last = last">
+                                {{product?.name}}
+                            </span>
+                        </span>
+                    </h4>
+                    <span class="img-sec" *ngIf="item?.images?.original?.length > 0">
+                        <img [src]="item?.images?.original[0]" alt="image" (click)="showPopup(item)">
+                    </span>
+                    <span class="posted-time" *ngIf="item?.display_date">{{item?.display_date | timeAgo}}</span>
+                    <app-news-social-features [item]="item" [settingsData]="newsSettingsData" [allUserList]="allUserList" [productId]="productId" [trailId]="trailId">
+                    </app-news-social-features>
+                </div>
+                <div class="bouncing-loader" *ngIf="isTrailsLoad">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+            <div class="no-content" *ngIf="newsData?.length == 0 && isPageLoad && isInfoLoad">
+                <h3>No related news</h3>
+            </div>
+        </div>
+    </div>
+</div>

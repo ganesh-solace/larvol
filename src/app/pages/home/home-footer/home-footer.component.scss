@@ -1,0 +1,101 @@
+footer {
+    background: #323437;
+    padding: 41px 0;
+    text-align: center;
+    .footer-menu {
+      list-style-type: none;
+      @media (max-width: 767px) {
+        margin-bottom: 20px;
+      }
+      li {
+        display: inline-block;
+        a {
+          color: #fff;
+          padding: 10px;
+          opacity: 0.86;
+          position: relative;
+          i {
+            font-size: 16px;
+          }
+          &.email {
+            &:hover {
+              opacity: 0.75;
+            }
+          }
+          &.linkedin {
+            &:hover {
+              color: #0288d1 !important;
+            }
+          }
+          &.twitter {
+            &:hover {
+              color: #00aced !important;
+            }
+          }
+          &.fb {
+            &:hover {
+              color: #4e64b5 !important;
+            }
+          }
+          &.insta {
+            &:hover {
+              color: #125688 !important;
+              opacity: 0.75;
+            }
+          }
+        }
+      }
+    }
+    .copyright {
+      color: #fff !important;
+      line-height: 23px;
+      font-weight: 300px;
+      font-size: 14px;
+      font-family: "Montserrat", Sans-serif;
+      a {
+        opacity: 0.86;
+        color: #fff !important;
+        &:hover {
+          opacity: 0.75;
+        }
+      }
+    }
+  }
+
+  .cookie-bar-cst{    
+    padding: 12px 25px;
+    position: fixed;
+    z-index: 9999;
+    text-align: center;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: block;
+    min-height: 40px;
+    background: #fff;
+    border: 1px solid #333;
+    font-size: 14px;
+    line-height: 23px;
+    color: #3c4858;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 300;
+    .close{
+        position: absolute;
+        right: 5px;
+        top: 12px;
+        width: 20px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+    a{
+        padding: 0 8px;
+        text-decoration: underline !important;
+        font-weight: bold;
+        display: inline-block;
+        font-weight: 700;
+        &:hover{
+            opacity: .75;
+            text-decoration: underline !important;
+        }
+    }
+}

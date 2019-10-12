@@ -1,0 +1,23 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <h4 class="modal-title"> </h4>
+        <button type="button" (click)="closeModal('close')" class="close" data-dismiss="modal"><span><img src="./assets/images/cancel.png" alt="cancel"></span></button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="noteForm" novalidate>
+            <div class="form-group">
+                <textarea onfocus="this.placeholder = ''" placeholder="" class="form-control" rows="6" [maxlength]="contentLength" formControlName="content" name="notes" [(ngModel)]="noteText"></textarea>
+            </div>
+            <div class="form-group">
+                <ul class="btn-list list-inline">
+                    <li>
+                        <button class="btn btn-primary" type="submit" title="Update" (click)="updateNote()" [disabled]="!noteForm.valid">
+                            <span>Update</span>
+                        </button>
+                    </li>
+                    <!-- <li><span>Characters left: {{contentLength - noteText?.length}}</span></li> -->
+                </ul>
+            </div>
+        </form>
+    </div>
+</div>

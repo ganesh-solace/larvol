@@ -1,0 +1,64 @@
+<div class="breadcrumbs-sec">
+    <div class="container">
+        <ul class="breadcrubs-list">
+            <li>
+                <a href="javascript:void(0)" title="Home" [routerLink]="['']">Home</a>
+            </li>
+            <li>
+                <a href="javascript:void(0)" title="Contact Sales Team" class="active">Contact Sales Team</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="login-sec">
+    <div class="container">
+        <div class="col-sm-12">
+            <div class="border-sec border-form form-sec counter-request">
+                <div class="row">
+                    <div class="col-6 mx-auto">
+                        <form class="example-form" [formGroup]="counterRequestForm" novalidate>
+                            <div class="form-group" [ngClass]="{'error': counterRequestForm.valid == false}">
+                                <!-- <mat-form-field class="example-full-width"> -->
+                                <input onfocus="this.ph=this.placeholder;this.placeholder=''" onblur="this.placeholder = this.ph" formControlName="first_name" type="text" placeholder="First Name *" class="form-control">
+                                <span class="error" *ngIf="counterRequestForm.controls.first_name.touched && counterRequestForm.controls.first_name.errors?.required">*Enter First Name.​​</span>
+                                <!-- </mat-form-field> -->
+                            </div>
+                            <div class="form-group" [ngClass]="{'error': counterRequestForm.valid == false}">
+                                <!-- <mat-form-field class="example-full-width"> -->
+                                <input onfocus="this.ph=this.placeholder;this.placeholder=''" onblur="this.placeholder = this.ph" formControlName="last_name" type="text" placeholder="Last Name *" class="form-control">
+                                <span class="error" *ngIf="counterRequestForm.controls.last_name.touched && counterRequestForm.controls.last_name.errors?.required">*Enter Last Name.​​</span>
+                                <!-- </mat-form-field> -->
+                            </div>
+                            <div class="form-group" [ngClass]="{'error': counterRequestForm.valid == false}">
+                                <!-- <mat-form-field class="example-full-width"> -->
+                                <input onfocus="this.ph=this.placeholder;this.placeholder=''" onblur="this.placeholder = this.ph" formControlName="email" type="email" placeholder="Email Address *" class="form-control">
+                                <span class="error" *ngIf="counterRequestForm.controls.email.touched && counterRequestForm.controls.email.errors?.required">*Enter Email Address.​​​</span>
+                                <span class="error" *ngIf="counterRequestForm.controls.email.touched && (counterRequestForm.controls.email.errors?.email || counterRequestForm.controls.email.errors?.pattern)">*Please enter a valid email address.​</span>
+                                <!-- </mat-form-field> -->
+                            </div>
+                            <div class="form-group" [ngClass]="{'error': counterRequestForm.valid == false}">
+                                <!-- <mat-form-field class="example-full-width"> -->
+                                <input onfocus="this.ph=this.placeholder;this.placeholder=''" onblur="this.placeholder = this.ph" formControlName="phone_no" (keypress)="numberOnly($event)" type="tel" maxlength="10" placeholder="Phone Number *" class="form-control">
+                                <span class="error" *ngIf="counterRequestForm.controls.phone_no.touched && counterRequestForm.controls.phone_no.errors?.required">*Enter Phone Number.​</span>
+                                <!-- </mat-form-field> -->
+                            </div>
+                            <!-- <div class="form-group text-center"> 
+                                <button class="btn btn-primary" type="submit" (click)="onSubmit()" title="Submit">Submit</button>
+                            </div> -->
+                            <div class="form-group">
+                                <ul class="btn-list list-inline">
+                                    <li>
+                                        <button class="btn btn-primary" type="submit" (click)="onSubmit()" title="Submit">Submit</button>
+                                    </li>
+                                    <li>
+                                        <button class="btn btn-primary" type="button" title="Cancel" [routerLink]="['']">Cancel</button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

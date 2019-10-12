@@ -1,0 +1,40 @@
+<div class="breadcrumbs-sec">
+    <div class="container">
+        <ul class="breadcrubs-list previous-page">
+            <li (click)="goBack()">
+                <a href="javascript:void(0)" title="Back to previous page">Back to previous page</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="login-sec">
+    <div class="container">
+        <div class="col-sm-12">
+            <div class="border-sec form-sec counter-request feedback-page">
+                <h2>How can we help?​</h2>
+                <div class="row">
+                    <div class="col-6 mx-auto">
+                        <form class="example-form" [formGroup]="feedbackForm" novalidate>
+                            <div class="form-group">
+                                <label>Write Feedback​</label>
+                                <textarea class="form-control" rows="6" formControlName="feedback" name="feedback" placeholder="How can we help?" onfocus="this.ph=this.placeholder;this.placeholder=''" onblur="this.placeholder = this.ph"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <div class="attach-form">
+                                    <input type="text" readonly formControlName="image" name="image" placeholder="Attach Image">
+                                </div>
+                                <input type="file" (change)="uploadFeedbackPic($event)" style="display: none;" accept="image/x-png,image/gif,image/jpeg" #feedbackImage>
+                                <span class="icon camera-icon" (click)="triggerUpload()">
+                                    <img src="./assets/images/photo-camera.png">
+                                </span>
+                            </div>
+                            <div class="form-group text-center">
+                                <button class="btn btn-primary" [disabled]="!feedbackForm.valid" type="submit" title="Submit" (click)="submitFeedback()">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

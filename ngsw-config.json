@@ -1,0 +1,54 @@
+{
+    "index": "/index.html",
+    "assetGroups": [
+        {
+            "name": "app",
+            "installMode": "prefetch",
+            "updateMode": "prefetch",
+            "resources": {
+                "files": [
+                    "/favicon.ico",
+                    "/index.html"
+                ],
+                "versionedFiles": [
+                    "/*.css",
+                    "/*.js",
+                    "/*.bundle.css",
+                    "/*.bundle.js",
+                    "/*.chunk.js",
+                    "/*.json",                    
+                    "/*.ttf",
+                    "/*.png",
+                    "/*.jpg",
+                    "/*.ico",
+                    "/*.jpeg",
+                    "/*.woff2",
+                    "/*.woff",
+                    "/**"
+                ]            
+            }
+        },
+        {
+            "name": "assets",
+            "installMode": "lazy",
+            "updateMode": "lazy",
+            "resources": {
+                "files": [
+                    "/assets/**"
+                ]
+            }
+        }
+    ],
+     "dataGroups": [
+        {
+          "name": "from-static",          
+          "urls": ["https://kapi.inexture.com/**", "https://kapi.larvol.com/**"],
+          "cacheConfig": {
+            "strategy": "freshness",
+            "maxSize": 100,
+            "maxAge": "1h",
+            "timeout": "3m"
+          }
+        }
+      ]
+}

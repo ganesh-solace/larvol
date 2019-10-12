@@ -1,0 +1,182 @@
+<div class="breadcrumbs-sec">
+    <div class="container">
+        <ul class="breadcrubs-list previous-page">
+            <li (click)="goBack()">
+                <a href="javascript:void(0)" title="Back to previous page">Back to previous page</a>
+            </li>
+        </ul>
+        <div class="dropbox-sec">
+            <ul>
+                <li class="institution-drop">
+                    <button class="btn-dropbox btn-border institute" (click)="showInstitutionList()" [ngClass]="{'selected': institutionSearchCount > 0}" type="button">institution <span class="institute" *ngIf="institutionSearchCount > 0">​({{institutionSearchCount}})</span> <i class="fa fa-caret-down institute"></i></button>
+                    <div class="dropdown-content institute" *ngIf="showInstitution" [ngClass]="{'show' : showInstitution}">
+                        <div class="dropdown-search pos-rel institute">
+                            <input type="text" onfocus="this.ph=this.placeholder;this.placeholder=''" onblur="this.placeholder = this.ph" placeholder="Add an institution​" [(ngModel)]="instituteKeyword" (focus)="searchInstitutionFromList($event)" class="form-control institute search-institute"
+                                (input)="searchInstitutionFromList($event)">
+                            <!-- <span class="icon institute" *ngIf="institutionType"><i class="fa fa-times institute"></i></span> -->
+                            <div class="suggestion-list institute search-institute" *ngIf="institutionType && searchInstituteList?.length > 0">
+                                <ul class="institute search-institute">
+                                    <li class="institute search-institute" *ngFor="let item of searchInstituteList; let index = index;" (click)="selectInstituteForSearch(item)">
+                                        {{item?.display_name}}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <ul class="filter-list institute" *ngIf="frequentInstituteList?.length > 0 && allFrequentInstituteList?.length > 0">
+                            <li class="institute" *ngFor="let item of frequentInstituteList; let index = index;">
+                                <label class="checkbox-block institute">
+                                    <input type="checkbox" class="institute" name={{item?.id}} [checked]="item.selected" (click)="selectInstituteSearch(item)">
+                                    <span class="checkmark institute"></span>
+                               </label>
+                                <span class="filter-text institute">{{item?.display_name}}</span>
+                            </li>
+                        </ul>
+                        <ul class="filter-list institute" *ngIf="frequentInstituteList?.length == 0 || allFrequentInstituteList?.length == 0" infiniteScroll (scrolled)="onInstituteScroll($event)" [scrollWindow]="false">
+                            <li class="institute" *ngFor="let item of existInstituteList; let index = index;">
+                                <label class="checkbox-block institute">
+                                    <input type="checkbox" class="institute" name={{item?.id}} [checked]="item.selected" (click)="selectInstituteForSearch(item)">
+                                    <span class="checkmark institute"></span>
+                               </label>
+                                <span class="filter-text institute">{{item?.display_name}}</span>
+                            </li>
+                        </ul>
+                        <ul class="btn-list institute">
+                            <li class="institute">
+                                <button *ngIf="!selectInstitute" class="btn-cancel btn-primary institute" type="reset" (click)="cancelInstituteASearchData()">Cancel</button>
+                                <button *ngIf="selectInstitute" class="btn-cancel btn-primary institute" type="reset" (click)="clearInstituteASearchData()">Clear</button>
+                            </li>
+                            <li class="institute">
+                                <button class="btn-apply btn-primary institute" type="submit" (click)="applyInstitueSearchOnData()">Apply</button>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <button class="btn-dropbox btn-border area" (click)="showAreaList()" [ngClass]="{'selected': areaSearchCount > 0}" type="button">area <span class="area" *ngIf="areaSearchCount > 0">({{areaSearchCount}})</span> <i class="fa fa-caret-down area"></i></button>
+                    <div class="dropdown-content area" *ngIf="showArea" [ngClass]="{'show' : showArea}">
+                        <div class="dropdown-search area">
+                            <input type="text" onfocus="this.ph=this.placeholder;this.placeholder=''" onblur="this.placeholder = this.ph" placeholder="Add an area​" [(ngModel)]="areaKeyword" class="form-control area search-area" (focus)="searchAreaFromList($event)" (input)="searchAreaFromList($event)">
+                            <div class="suggestion-list area search-area" *ngIf="areaType && searchAreaList?.length > 0">
+                                <ul class="area search-area">
+                                    <li class="area search-area" *ngFor="let item of searchAreaList; let index = index;" (click)="selectAreaForSearch(item)">
+                                        {{item?.name}}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <ul class="filter-list area" *ngIf="frequentAreaList?.length > 0 && allFrequentAreaList?.length > 0">
+                            <li class="area" *ngFor="let item of frequentAreaList; let index = index;">
+                                <label class="checkbox-block area">
+                                    <input type="checkbox" class="area" name={{item?.id}} [checked]="item.selected" (click)="selectAreaSearch(item)">
+                                    <span class="checkmark area"></span>
+                               </label>
+                                <span class="filter-text area">{{item?.name}}</span>
+                            </li>
+                        </ul>
+                        <ul class="filter-list area" *ngIf="frequentAreaList?.length == 0 || allFrequentAreaList?.length == 0" infiniteScroll (scrolled)="onAreaScroll($event)" [scrollWindow]="false">
+                            <li class="area" *ngFor="let item of existAreaList; let index = index;">
+                                <label class="checkbox-block area">
+                                    <input type="checkbox" class="area" name={{item?.id}} [checked]="item.selected" (click)="selectAreaForSearch(item)">
+                                    <span class="checkmark area"></span>
+                               </label>
+                                <span class="filter-text area">{{item?.name}}</span>
+                            </li>
+                        </ul>
+                        <ul class="btn-list area">
+                            <li class="area">
+                                <button *ngIf="!selectArea" class="btn-cancel btn-primary area" type="reset" (click)="cancelAreaASearchData()">Cancel</button>
+                                <button *ngIf="selectArea" class="btn-cancel btn-primary area" type="reset" (click)="clearAreaASearchData()">Clear</button>
+                            </li>
+                            <li class="area">
+                                <button class="btn-apply btn-primary area" type="submit" (click)="applyAearSearchOnData()">Apply</button>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <h6 (click)="clearSearchData()">Clear <span *ngIf="searchCount > 0">{{searchCount}}</span></h6>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="sec-kols">
+    <div class="container">
+        <!-- listing content-->
+        <div class="kols-list" *ngIf="kolsData?.length > 0 && isPageLoad" infiniteScroll (scrolled)="onScroll($event)">
+            <div class="kols-block" *ngFor="let item of kolsData; let index = index; ">
+                <div class="row">
+                    <div class="col-md-2 col-2" (click)="openKOLsDetail(item)">
+                        <div class="img-sec round" [class.img-loading]="!item?.imageLoad" [ngClass]="{'img-round-sec' : item?.kol_image_url == ''}">
+                            <a href="javascript:void(0)">
+                                <img [src]="item?.kol_image_url" (error)="checkImageExistorNot(item)" *ngIf="item?.kol_image_url" (load)="imageLoadSuccess(item)">
+                                <span class="text-round" *ngIf="!item?.kol_image_url">{{item?.kol_short_name}}</span>
+
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-8 col-8" (click)="openKOLsDetail(item)">
+                        <div class="info-sec">
+                            <h3>
+                                <a href="javascript:void(0)">{{item?.kol_full_name}}<span *ngIf="item?.kol_qualification && item?.kol_full_name">, </span>{{item?.kol_qualification}}</a>
+                            </h3>
+                            <p *ngFor="let list of item?.institutionsData; let ind = index;">
+                                <span *ngIf="ind < 3">
+                                    {{list}}<span *ngIf="ind == 2 && item?.institutionsData.length > 3">...</span>
+                                </span>
+                                <!-- <span *ngIf="ind < 3">{{list?.name}}<span *ngIf="list?.name && list?.city">, </span>{{list?.city}}<span *ngIf="list?.state">, </span>{{list?.state}}<span *ngIf="list?.country">, </span>{{list?.country}}<span *ngIf="ind == 2">...</span></span> -->
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-2 badge-area">
+                        <div class="badge-sec">
+                            <span class="badge red-bg" *ngIf="item?.kol_notification_count > 0 && item?.favourite" (click)="openKOLsDetail(item)">
+                                <span *ngIf="item?.kol_notification_count >= 1000">999+</span>
+                            <span *ngIf="item?.kol_notification_count < 1000">{{item?.kol_notification_count}}</span>
+                            </span>
+                            <app-kols-star-view [kolsData]="item"></app-kols-star-view>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bouncing-loader" *ngIf="isLoadMore">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <div class="no-result-foo" *ngIf="!advancedSearchData">
+                <p class="no-result-helper-text">Didn’t find what you were looking for?
+                    <span>
+                    <a href="javascript:void(0)" (click)="openPageUrl('/kol-request')">Let us know</a>
+                </span> and we’ll add the KOL you’re interested in.</p>
+            </div>
+        </div>
+        <!-- listing content end-->
+        <!--no data start-->
+        <!-- <div class="kols-list no-kols" *ngIf="kolsData?.length == 0 && !isLAPP">
+            <div class="no-kols-sec">
+                <h3>No Result Found.</h3>
+            </div>
+        </div> -->
+        <div class="kols-list no-kols" *ngIf="kolsData?.length == 0 && isPageLoad && !advancedSearchData">
+            <div class="no-kols-sec no-kol-content">
+                <!-- <h3>No Result Found.</h3> -->
+                <p>Please try with a different search term.
+                    <br> Didn’t find what you were looking for?
+                    <span>
+                        <a href="javascript:void(0)" (click)="openPageUrl('/kol-request')">Let us know</a>
+                    </span> and
+                    <br> we’ll add the KOL you’re interested in.
+                </p>
+            </div>
+        </div>
+        <div class="kols-list no-kols" *ngIf="kolsData?.length == 0 && isPageLoad && advancedSearchData">
+            <div class="no-kols-sec no-kol-content">
+                <p>
+                    No results found. Please modify your search criteria.
+                </p>
+            </div>
+        </div>
+        <!--no data ends-->
+    </div>
+</div>

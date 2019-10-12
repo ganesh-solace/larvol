@@ -1,0 +1,45 @@
+<div class="breadcrumbs-sec">
+    <div class="container">
+        <ul class="breadcrubs-list previous-page">
+            <li (click)="goBack()">
+                <a href="javascript:void(0)" title="Back to previous page">Back to previous page</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="sec-kols">
+    <div class="container"> 
+        <div class="kols-list notification-list" *ngIf="notificationList?.length > 0"
+            infiniteScroll      
+            (scrolled)="onScroll($event)"
+            >
+            <div class="like-list">
+                <div class="like-block" *ngFor="let item of notificationList" (click)="openNewsPage(item)" [ngClass]="{'new-notification': item?.read_status == 0}">
+                    <span class="user-sec" *ngIf="!item?.user_image" [ngClass]="{'img-round-sec' : item?.user_image == null}">
+                        <!-- <img src="../../../assets/images/default-user.png" alt="User Icon"> -->
+                        <span class="text-round">{{getNameInitials(item)}}</span>
+                    </span>
+                    <span class="user-sec" *ngIf="item?.user_image">
+                        <img [src]="item?.user_image" alt="User Icon">
+                    </span>
+                    <div class="user-name">
+                        <h4>
+                            <a href="javascript:void(0)">
+                                <span>{{item?.message}}</span>
+                                <span *ngIf="item?.news_item?.title">: {{item?.news_item?.title | trimstr:'30'}}</span>
+                            </a>
+                        </h4>
+                    </div>
+                    <div class="posted-time">
+                        <span>{{item?.created_at | timeAgo}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="kols-list no-kols" *ngIf="notificationList?.length == 0  && isPageLoad">
+            <div class="no-kols-sec">
+                <h3>No Notifications</h3>
+            </div>
+        </div>
+    </div>
+</div>

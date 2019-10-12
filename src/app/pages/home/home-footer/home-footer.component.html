@@ -1,0 +1,33 @@
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="footer-wrapper">
+                    <ul class="footer-menu pull-left">
+                        <li><a class="email" href="mailto:info@larvol.com"><i class="fa fa-envelope"></i></a></li>
+                        <li><a class="linkedin" href="https://www.linkedin.com/company/larvol/"><i
+                                    class="fa fa-linkedin"></i></a>
+                        </li>
+                        <li><a class="twitter" href="https://twitter.com/larvol"><i class="fa fa-twitter"></i></a></li>
+                        <li><a class="fb" href="https://www.facebook.com/LarvolGroup"><i
+                                    class="fa fa-facebook-f"></i></a></li>
+                        <li><a class="insta" href="https://www.instagram.com/larvol_/"><i
+                                    class="fa fa-instagram"></i></a></li>
+                    </ul>
+
+                    <div class="copyright pull-right">
+                        Copyright © 2019 | <a href="https://LarvolOmni.com/" rel="nofollow">LarvolOmni.com</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<span class="cookie-bar-cst" *ngIf="isShow">This website uses cookies to improve your experience. We'll assume you
+    accept this policy as long as you are using this website
+    <label class="close" (click)="close()">X</label>
+    <a href="javascript:void(0)" id="obfx-accept-cookie-policy" (click)="acceptCookie()">Accept</a>
+    <!-- <a href="http://larvol-omni.inexture.com/index.php/privacy-policy/">View Policy</a> -->
+    <a href="javascript:void(0)" [routerLink]="['/view-policy']">View Policy</a>
+</span>

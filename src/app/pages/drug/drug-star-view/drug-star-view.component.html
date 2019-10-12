@@ -1,0 +1,24 @@
+<span class="favourite-icon" [ngClass]="{'selected' : productData?.favourite == true}" title="{{starTitle}}"
+    (click)="addOrRemoveFavouriteDrug(productData, content)">
+    <i class="fa"
+        [ngClass]="{'fa-star' : productData?.favourite == true, 'fa-star-o' : productData?.favourite == false}"></i>
+</span>
+
+<ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h3> </h3>
+        <button type="button" (click)="d('Cross click')" class="close" data-dismiss="modal">
+            <span>
+                <img src="./assets/images/cancel.png" alt="cancel img">
+            </span>
+        </button>
+    </div>
+    <div class="modal-body modalFavourite">
+        <p [innerHTML]="requestText"></p>
+    </div>
+    <div class="modal-footer">
+        <ul class="btn-list list-inline">
+            <li><button class="btn btn-primary" type="reset" title="Ok" (click)="close()">Ok</button></li>
+        </ul>
+    </div>
+</ng-template>

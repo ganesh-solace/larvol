@@ -1,0 +1,73 @@
+<section class="sec-kols" *ngIf="productsData?.length > 0 && isLoad" infiniteScroll (scrolled)="onScroll($event)">
+    <div class="container">
+        <div class="kols-list">
+            <div class="kols-block" *ngFor="let item of productsData; let index = index; ">
+                <div class="row">
+                    <div class="col-md-10 col-10" (click)="openProductDetail(item)">
+                        <div class="info-sec">
+                            <h3>
+                                <a href="javascript:void(0)">{{item?.name}}</a>
+                            </h3>
+                            <p>
+                                <span>{{item?.institutions_list}}</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-2 badge-area">
+                        <div class="badge-sec">
+                            <span class="badge red-bg" *ngIf="item?.product_notification_count > 0" (click)="openProductDetail(item)">
+                                <!-- <span>{{item?.product_notification_count}}</span> -->
+                            <span *ngIf="item?.product_notification_count >= 1000">999+</span>
+                            <span *ngIf="item?.product_notification_count < 1000">{{item?.product_notification_count}}</span>
+                            </span>
+                            <app-drug-star-view (changeData)="changeDataByUser($event)" [index]="index" [productData]="item" class="dashboard-fav"></app-drug-star-view>
+                            <!-- <span class="favourite-icon selected" title="favourite">
+<i class="fa fa-star"></i>
+</span> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bouncing-loader" *ngIf="isLoadMore">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+</section>
+
+<section class="sec-kols kol-center" *ngIf="productsData?.length == 0 && isLoad">
+    <div class="container">
+        <div class="no-favourite-kols" *ngIf="!isLAPP">
+            <div class="kols-list no-kols no-kols-content">
+                <h4 *ngIf="loggedUserData?.max_drugs">Your subscription includes access to premium content for up to {{loggedUserData?.max_drugs}} drugs.
+                </h4>
+                <h4 *ngIf="!loggedUserData?.max_drugs">Your subscription includes access to premium content for up to 3 drugs.
+                </h4>
+                <h4 class="no-selected-kol">
+                    Please Contact <a href="mailto:omni@larvol.com">omni@larvol.com</a> if you have any questions.​
+                </h4>
+            </div>
+        </div>
+        <div class="no-favourite-kols" *ngIf="isLAPP">
+            <div class="kols-list no-kols no-kols-content">
+                <!-- <h4 *ngIf="loggedUserData?.drugs_subscription && !loggedUserData?.created_by">Free users can access premium content for up to 3 drugs. Use the search bar to find your drugs and click
+                    <span class="favourite-icon selected" title="Premium"><i class="fa fa-star"></i></span> to access premium content.
+                </h4>
+                <h4 *ngIf="!loggedUserData?.drugs_subscription && !loggedUserData?.created_by">Free users can access premium content for up to 3 drugs. Use the search bar to find your drugs and click
+                    <span class="favourite-icon selected" title="Premium"><i class="fa fa-star"></i></span> to access premium content.
+                </h4> -->
+                <h4 *ngIf="loggedUserData?.drugs_subscription">You can access premium content for up to {{loggedUserData?.drugs_subscription}} drugs. Use the search bar to find your drugs and click
+                    <span class="favourite-icon selected"><i class="fa fa-star-o"></i></span> to access premium content.
+                </h4>
+                <h4 *ngIf="!loggedUserData?.drugs_subscription">You can access premium content for up to 3 drugs. Use the search bar to find your drugs and click
+                    <span class="favourite-icon selected"><i class="fa fa-star-o"></i></span> to access premium content.
+                </h4>
+                <h4 class="no-selected-kol">
+                    Contact <a href="mailto:omni@larvol.com">omni@larvol.com</a> to upgrade your subscription.
+                </h4>
+            </div>
+        </div>
+    </div>
+</section>

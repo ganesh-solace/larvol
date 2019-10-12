@@ -1,0 +1,144 @@
+<!-- <div class="breadcrumbs-sec">
+    <div class="container">
+        <ul class="breadcrubs-list">
+            <li>
+                <a href="javascript:void(0)" title="Drugs" (click)="redirectOnLandingPage()">Drugs</a>
+            </li>
+            <li>
+                <a href="javascript:void(0)" class="active" title="{{productData?.name}}">{{productData?.name}}</a>
+            </li>
+        </ul>
+    </div>
+</div> -->
+<div class="sec-kols">
+    <div class="container no-padding">
+        <div class="kols-list">
+            <div class="menu-icon" (click)="closeDetailView()">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </div>
+            <div class="info-sec">
+                <h3>
+                    <strong>Company: </strong>
+                    <div class="content-right">
+                        <span *ngIf="productData?.product_institutions?.length == 0">Not applicable</span>
+                        <span *ngIf="productData?.product_institutions?.length > 0">
+                          <span
+                              *ngFor="let company of productData?.product_institutions; let last = last; "
+                              class="moa-info">{{company?.name}}<span *ngIf="!last" class="last-tag">,
+                              </span></span>
+                        </span>
+                    </div>
+                </h3>
+                <h3>
+                    <strong>MOA: </strong>
+                    <div class="content-right">
+                        <span *ngIf="productData?.moas_cols?.length == 0">Not applicable<span
+                              *ngIf="!showDetail"> ...</span></span>
+                        <span *ngIf="productData?.moas_cols?.length > 0">
+                          <span *ngFor="let moa of productData?.moas_cols; let last = last; "
+                              class="moa-info">
+                              {{moa?.name}}<span *ngIf="!last" class="last-tag">, </span>
+                        </span>
+                        </span>
+                    </div>
+                </h3>
+                <h3>
+                    <strong>Status: </strong>
+                    <div class="content-right">
+                        <span>
+                          <ul class="drug-list">
+                              <li>
+                                  <strong>Marketed </strong>
+                                  <span *ngIf="productData?.phase?.marketed">
+                                      {{productData?.phase?.marketed}}
+                                  </span>
+                        <span *ngIf="!productData?.phase?.marketed">
+                                      Not applicable
+                                  </span>
+                        </li>
+                        <li>
+                            <strong>Filed </strong>
+                            <span *ngIf="productData?.phase?.filed">
+                                      {{productData?.phase?.filed}}
+                                  </span>
+                            <span *ngIf="!productData?.phase?.filed">
+                                      Not applicable
+                                  </span>
+                        </li>
+                        <li>
+                            <strong>Phase 3 </strong>
+                            <span *ngIf="productData?.phase?.phase_3">
+                                      {{productData?.phase?.phase_3}}
+                                  </span>
+                            <span *ngIf="!productData?.phase?.phase_3">
+                                      Not applicable
+                                  </span>
+                        </li>
+                        <li>
+                            <strong>Phase 2 </strong>
+                            <span *ngIf="productData?.phase?.phase_2">
+                                      {{productData?.phase?.phase_2}}
+                                  </span>
+                            <span *ngIf="!productData?.phase?.phase_2">
+                                      Not applicable
+                                  </span>
+                        </li>
+                        <li>
+                            <strong>Phase 1 </strong>
+                            <span *ngIf="productData?.phase?.phase_1">
+                                     {{productData?.phase?.phase_1}}
+                                  </span>
+                            <span *ngIf="!productData?.phase?.phase_1">
+                                      Not applicable
+                                  </span>
+                        </li>
+                        <li *ngIf="productData?.discontinuedStatus">
+                            <strong>{{productData?.discontinuedStatus}} </strong>
+                            <span *ngIf="productData?.discontinuedAreas">
+                              {{productData?.discontinuedAreas}}
+                          </span>
+                            <span *ngIf="!productData?.discontinuedAreas">
+                              Not applicable
+                          </span>
+                        </li>
+                        </ul>
+                        </span>
+                    </div>
+                </h3>
+                <h3>
+                    <strong>Type: </strong>
+                    <div class="content-right">
+                        <span *ngIf="!productData?.product_type">Not applicable</span>
+                        <span *ngIf="productData?.product_type">
+                          {{productData?.product_type}}
+                      </span>
+                    </div>
+                </h3>
+                <h3>
+                    <strong>Route: </strong>
+                    <div class="content-right">
+                        <span *ngIf="productData?.formulations_cols?.length == 0">Not applicable</span>
+                        <span *ngIf="productData?.formulations_cols?.length > 0">
+                          <span
+                              *ngFor="let route of productData?.formulations_cols; let last = last; "
+                              class="moa-info">{{route?.type}}<span *ngIf="!last" class="last-tag">,
+                              </span></span>
+                        </span>
+                    </div>
+                </h3>
+                <h3>
+                    <strong>Names: </strong>
+                    <div class="content-right">
+                        <span *ngIf="productData?.code_names_cols?.length == 0">Not applicable</span>
+                        <span *ngIf="productData?.code_names_cols?.length > 0">
+                          <span *ngFor="let code of productData?.code_names_cols; let last = last; "
+                              class="moa-info">{{getCodeName(code?.name)}}<span *ngIf="!last" class="last-tag">,
+                              </span></span>
+                        </span>
+                    </div>
+                </h3>
+            </div>
+        </div>
+    </div>
+</div>

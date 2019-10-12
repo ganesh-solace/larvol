@@ -1,0 +1,52 @@
+<div class="breadcrumbs-sec">
+    <div class="container">
+        <ul class="breadcrubs-list">
+            <li>
+                <a href="javascript:void(0)" title="Drugs" (click)="redirectOnLandingPage()">Drugs</a>
+            </li>
+            <li>
+                <a href="javascript:void(0)" title="Drug Request" class="active">Drug Request</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="login-sec">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="border-form border-sec form-sec counter-request safari_only">
+                    <div class="row">
+                        <div class="col-6 mx-auto">
+                            <form class="example-form" [formGroup]="requestForm" novalidate>
+                                <div class="form-group">
+                                    <input class="form-control" onfocus="this.ph=this.placeholder;this.placeholder=''" onblur="this.placeholder = this.ph" type="text" placeholder="Drug Name *" formControlName="drug_name">
+                                    <span class="error" *ngIf="requestForm.controls.drug_name.touched && requestForm.controls.drug_name.errors?.required">*Please enter drug name.​</span>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" onfocus="this.ph=this.placeholder;this.placeholder=''" onblur="this.placeholder = this.ph" placeholder="MOA" class="form-control" formControlName="moa">
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" onfocus="this.ph=this.placeholder;this.placeholder=''" onblur="this.placeholder = this.ph" placeholder="Company" class="form-control" formControlName="company">
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" onfocus="this.ph=this.placeholder;this.placeholder=''" onblur="this.placeholder = this.ph" placeholder="Additional information" class="form-control" formControlName="additional_information">
+                                </div>
+                                <div class="form-group">
+                                    <ul class="btn-list list-inline">
+                                        <li>
+                                            <button class="btn btn-primary btn-cancel" type="button" title="Cancel" (click)="cancelClick()">Cancel</button>
+                                        </li>
+                                        <li>
+                                            <button class="btn btn-primary" type="submit" title="Submit" (click)="submitDrugRequest()">Submit</button>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

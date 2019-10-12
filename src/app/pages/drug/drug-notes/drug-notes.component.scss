@@ -1,0 +1,27 @@
+.sec-write-note{
+    textarea{
+        min-height: 380px;
+        border-color: #fff;
+        resize: none;
+        color: #000;
+        padding: 0;
+        padding-right: 7px;
+        @media(max-width:767px){}
+        &:focus{
+            border-color: #fff;
+        }
+    }
+    .btn-primary{
+        padding: 10px 50px;
+        font-weight: 600;
+        @media(max-width:576px){
+            padding: 10px 30px;
+        }
+    }
+}
+.kols-list{
+    @media(max-width:767px){
+        padding: 20px;
+    }
+}
+.kols-list{min-height: 516px;}

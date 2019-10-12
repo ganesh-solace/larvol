@@ -1,0 +1,135 @@
+<header>
+    <div class="container">
+        <div class="header-logo">
+            <a href="#" title="Omni"><img src="./assets/images/larvol-logo.png" alt="logo"></a>
+            <!-- <span>BETA</span> -->
+        </div>
+    </div>
+</header>
+<!-- <app-header></app-header> -->
+<div class="login-sec">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="breadcrumbs-sec">
+                    <div class="container">
+                        <ul class="breadcrubs-list previous-page">
+                            <li (click)="goOnLoginPage()">
+                                <a href="javascript:void(0)" title="Back to login page">Back to login page</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="border-sec form-sec counter-request signup-form safari_only">
+                    <div class="row">
+                        <div class="col-6 mx-auto">
+                            <form class="example-form" [formGroup]="signupForm" novalidate>
+                                <div class="form-group">
+                                    <!-- <mat-form-field class="example-full-width">
+                                                  <span class="icon"><i class="fa fa-user"></i></span>
+                                                  <input formControlName="first_name" matInput type="text" placeholder="First Name" class="form-control">
+                                                  <span class="error" *ngIf="signupForm.controls.first_name.touched && (signupForm.controls.first_name.errors?.required)">*Please enter your first name.</span>
+                                             </mat-form-field> -->
+
+                                    <input formControlName="first_name" onfocus="this.ph=this.placeholder;this.placeholder=''" onblur="this.placeholder = this.ph" matInput type="text" placeholder="First Name" class="form-control" [ngClass]="{'error-border': signupForm.controls.first_name.touched && (signupForm.controls.first_name.errors?.required)}">
+                                    <span class="error" *ngIf="signupForm.controls.first_name.touched && (signupForm.controls.first_name.errors?.required)">*Please enter your first name.</span>
+
+                                </div>
+                                <div class="form-group">
+                                    <!-- <mat-form-field class="example-full-width">
+                                                  <span class="icon"><i class="fa fa-user"></i></span>
+                                                  <input formControlName="last_name" matInput type="text" placeholder="Last Name" class="form-control">
+                                                  <span class="error" *ngIf="signupForm.controls.last_name.touched && (signupForm.controls.last_name.errors?.required)">*Please enter your last name.</span>
+                                             </mat-form-field> -->
+                                    <input formControlName="last_name" onfocus="this.ph=this.placeholder;this.placeholder=''" onblur="this.placeholder = this.ph" matInput type="text" placeholder="Last Name" class="form-control" [ngClass]="{'error-border': signupForm.controls.last_name.touched && (signupForm.controls.last_name.errors?.required)}">
+                                    <span class="error" *ngIf="signupForm.controls.last_name.touched && (signupForm.controls.last_name.errors?.required)">*Please enter your last name.</span>
+
+                                </div>
+                                <div class="form-group">
+                                    <!-- <mat-form-field class="example-full-width">
+                                                  <span class="icon"><i class="fa fa-envelope-o"></i></span>
+                                                  <input formControlName="email" matInput type="email" placeholder="Email" class="form-control" (input)="checkEmail()">
+                                                  <span class="error" *ngIf="signupForm.controls.email.touched && signupForm.controls.email.errors?.required">*Please enter your email address.​</span>
+                                                  <span class="error" *ngIf="signupForm.controls.email.touched && signupForm.controls.email.errors?.email">*Please enter a valid email address.​</span>
+                                             </mat-form-field> -->
+                                    <input formControlName="email" onfocus="this.ph=this.placeholder;this.placeholder=''" onblur="this.placeholder = this.ph" matInput type="email" placeholder="Email" class="form-control" [ngClass]="{'error-border': signupForm.controls.email.touched && (signupForm.controls.email.errors?.required || signupForm.controls.email.errors?.email || signupForm.controls.email.errors?.pattern)}"
+                                        (input)="checkEmail()">
+                                    <span class="error" *ngIf="signupForm.controls.email.touched && signupForm.controls.email.errors?.required">*Please enter a valid email address.​</span>
+                                    <span class="error" *ngIf="signupForm.controls.email.touched && (signupForm.controls.email.errors?.email || signupForm.controls.email.errors?.pattern)">*Please enter a valid email address.​</span>
+                                    <span class="error" *ngIf="emailError">Email address exists. Please use sign in option.</span>
+                                </div>
+                                <div class="form-group">
+                                  <input formControlName="company" onfocus="this.ph=this.placeholder;this.placeholder=''" onblur="this.placeholder = this.ph" matInput type="email" placeholder="Company" class="form-control">
+                              </div>
+                                <div class="form-group">
+                                    <!-- <mat-form-field class="example-full-width"> -->
+                                    <!-- <span class="icon"><i class="fa fa-lock"></i></span> -->
+                                    <!-- <input formControlName="password" matInput type="password" placeholder="Password" class="form-control"> -->
+                                    <!-- <span class="error" *ngIf="signupForm.controls.password.touched && (signupForm.controls.password.errors?.required)">*Please enter your password.</span>                                                   -->
+                                    <!-- <span class="error passwrd-txt" *ngIf="(signupForm.controls.password.errors?.required || signupForm.controls.password.errors?.minlength)">Password must be at least 6 characters</span> -->
+                                    <!-- </mat-form-field> -->
+                                    <input formControlName="password" onfocus="this.ph=this.placeholder;this.placeholder=''" onblur="this.placeholder = this.ph" matInput type="password" placeholder="Password" class="form-control" [ngClass]="{'error-border': signupForm.controls.password.touched && (signupForm.controls.password.errors?.required || signupForm.controls.password.errors?.minlength) || (signupForm.controls.confirm_password.touched && (!signupForm.controls.confirm_password.errors?.minlength && !signupForm.controls.confirm_password.errors?.required && signupForm.controls.confirm_password.errors?.equalTo))}">
+                                    <span class="error" *ngIf="signupForm.controls.password.touched && (signupForm.controls.password.errors?.required || signupForm.controls.password.errors?.minlength)">*Password must be at least 6 characters.</span>
+                                </div>
+                                <div class="form-group">
+                                    <!-- <mat-form-field class="example-full-width">
+                                                  <span class="icon"><i class="fa fa-lock"></i></span>
+                                                  <input formControlName="confirm_password" matInput type="password" placeholder="Confirm Password"
+                                                       class="form-control">
+                                                       <span class="error" *ngIf="signupForm.controls.confim_password.touched && (signupForm.controls.confim_password.errors?.required)">*Please enter your confirm password.</span>
+                                                       <span class="error" *ngIf="signupForm.controls.confirm_password.touched && (signupForm.controls.confirm_password.errors?.required || signupForm.controls.confirm_password.errors?.minlength || signupForm.controls.confirm_password.errors?.equalTo)">
+                                                            *Passwords must match.​​
+                                                       </span>
+                                             </mat-form-field> -->
+                                    <input formControlName="confirm_password" onfocus="this.ph=this.placeholder;this.placeholder=''" onblur="this.placeholder = this.ph" matInput type="password" placeholder="Confirm Password" class="form-control" [ngClass]="{'error-border': signupForm.controls.confirm_password.touched && (signupForm.controls.confirm_password.errors?.required || signupForm.controls.confirm_password.errors?.minlength || signupForm.controls.confirm_password.errors?.equalTo)}">
+                                    <!-- <span class="error" *ngIf="signupForm.controls.confirm_password.touched && (signupForm.controls.confirm_password.errors?.required || signupForm.controls.confirm_password.errors?.minlength || signupForm.controls.confirm_password.errors?.equalTo)">
+                                                  *Passwords must match.​​
+                                             </span> -->
+                                    <span class="error" *ngIf="signupForm.controls.confirm_password.touched && signupForm.controls.confirm_password.errors?.required">*Please enter confirm new password.​​</span>
+                                    <span class="error" *ngIf="signupForm.controls.confirm_password.touched && signupForm.controls.confirm_password.errors?.minlength">*The confirm new password must be at least 6 characters.​​</span>
+                                    <span class="error" *ngIf="signupForm.controls.confirm_password.touched && (!signupForm.controls.confirm_password.errors?.minlength && !signupForm.controls.confirm_password.errors?.required && signupForm.controls.confirm_password.errors?.equalTo)">
+                                                  *Passwords must match.​​
+                                             </span>
+                                </div>
+                                <div class="form-group ">
+                                    <div class="checkbox-block terms-text" [ngClass]="{'error-box' : isFormSubmit && signupForm.controls.isCheck.errors?.required}">
+                                        <label class="checkbox-block terms-text">
+                                                       <p>By signing up, you agree to Larvol's <a [routerLink]="['/terms-of-service']"
+                                                                 title="Terms of Service">Terms of Service</a> and <a
+                                                                 [routerLink]="['/privacy-policy']" title="Privacy Policy">Privacy
+                                                                 Policy</a></p>
+                                                       <input type="checkbox" formControlName="isCheck">
+                                                       <span class="checkmark"></span>
+                                                       <span class="error" *ngIf="isFormSubmit && signupForm.controls.isCheck.errors?.required">Please agree to sign up.</span>
+                                                  </label>
+                                    </div>
+                                </div>
+                                <div class="captcha-sec">
+                                    <span>
+                                                  <!-- <recaptcha
+                                                       [(ngModel)]="myRecaptcha"
+                                                       (scriptLoad)="onScriptLoad()"
+                                                       (scriptError)="onScriptError()"
+                                                       (resolved)="resolved($event)"
+                                                  ></recaptcha> -->
+                                                  <!-- <re-captcha (resolved)="resolved($event)" siteKey="6Lcqfo4UAAAAAAjWnosKFm4LBc9cE3NMf-f-C32A"></re-captcha> -->
+                                                  <re-captcha (resolved)="resolved($event)" siteKey="6LetjpQUAAAAABlX23DG2aVFRqIWWPK-jx037Fxf"></re-captcha>
+                                                  <!-- <img src="../../../assets/images/captcha-img.png" alt="captcha img"> -->
+                                             </span>
+                                    <span class="error" *ngIf="isFormSubmit && signupForm.controls.recaptcha.errors?.required">Please complete the CAPTCHA.</span>
+                                </div>
+                                <div class="form-group text-center">
+                                    <button class="btn btn-primary" type="submit" title="Sign Up" (click)="doSignup()">Sign Up</button>
+                                </div>
+                            </form>
+                            <div class="text-center terms-text">
+                                <p>Already have an account? <a [routerLink]="['/login']" title="Sign in">Sign
+                                                  in</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

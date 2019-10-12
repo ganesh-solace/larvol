@@ -1,0 +1,9 @@
+<ol class="breadcrumb" *ngIf="!isHome">
+    <li *ngFor="let breadcrumb of breadcrumbs; let index = index;" class="breadcrumb-item">
+        <a [routerLink]="['']"  class="active">Home</a>
+        <span *ngIf="breadcrumb.type === 'detail'"> > </span>
+        <a *ngIf="breadcrumb.type === 'detail'" (click)="openUrl(breadcrumb, index)">
+            {{ breadcrumb.label }}
+        </a>
+    </li>
+</ol>

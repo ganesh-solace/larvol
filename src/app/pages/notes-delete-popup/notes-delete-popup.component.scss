@@ -1,0 +1,56 @@
+.btn-list {
+    text-align: center;
+    display: block;
+    width: 100%;
+    .btn-primary {
+        margin-top: 0;
+    }
+}
+
+.modal-footer {
+    padding: 0;
+    border-top: none;
+}
+
+.modal-header {
+    border: none;
+}
+
+.modal-content {
+    padding: 20px 25px 35px;
+    text-align: center;
+    @media(max-width: 767px) {
+        padding: 10px 20px 25px;
+    }
+    h4 {
+        width: 100%;
+        margin-bottom: 12px;
+        @media(max-width: 767px) {
+            font-size: 16px;
+        }
+        span {
+            word-break: break-all;
+            display: inline;
+        }
+    }
+}
+
+.btn-list li {
+    margin-right: 20px;
+    .btn-primary {
+        padding: 6px 30px;
+        border: 2px solid transparent;
+        &.btn-cancel {
+            background: transparent;
+            border-color: #a6a6a6;
+            color: #a6a6a6;
+            &:active,
+            &:hover,
+            &:focus {
+                color: #fff;
+                background: #a6a6a6 !important;
+                border-color: #a6a6a6 !important;
+            }
+        }
+    }
+}

@@ -1,0 +1,29 @@
+.modal-footer{
+    border-top:none;
+    p{
+        display: block;
+        width: 100%;
+        .btn{
+            margin-top: 0;
+        }
+    }
+}
+.modal-body{
+    max-width: 88%;
+    margin: 0 auto;
+    @media(max-width:767px){
+        max-width: 100%;
+    }
+    @media(max-width:576px){
+        padding: 10px;
+    }
+    p{
+        @media(max-width:576px){
+            font-size: 15px;
+        }
+        a{
+            font-weight: 600;
+            color: #007bff;
+        }
+    }
+}

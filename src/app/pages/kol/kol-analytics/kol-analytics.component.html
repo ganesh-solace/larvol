@@ -1,0 +1,95 @@
+<div class="kol-list">
+    <div class="dropbox-sec">
+        <ul>
+            <li class="institution-drop">
+                <button class="btn-dropbox btn-border area" type="button" (click)="showAreaList()" [ngClass]="{'selected': areaSearchCount > 0}">Disease <span class="area" *ngIf="areaSearchCount > 0">({{areaSearchCount}})</span> <i class="fa fa-caret-down area"></i></button>
+                <div class="dropdown-content area" *ngIf="showArea" [ngClass]="{'show' : showArea}">
+                    <div class="dropdown-search area">
+                        <input type="text" onfocus="this.ph=this.placeholder;this.placeholder=''" onblur="this.placeholder = this.ph" placeholder="Add Disease" [(ngModel)]="areaKeyword" class="form-control area search-area" (focus)="searchAreaFromList($event)" (input)="searchAreaFromList($event)">
+                        <div class="suggestion-list area search-area" *ngIf="areaType && searchAreaList?.length > 0">
+                            <ul class="area search-area">
+                                <li class="area search-area" *ngFor="let item of searchAreaList; let index = index;" (click)="selectAreaForSearch(item)">
+                                    {{item?.name}}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <ul class="filter-list area" *ngIf="frequentAreaList?.length > 0 && allFrequentAreaList?.length > 0">
+                        <li class="area" *ngFor="let item of frequentAreaList; let index = index;">
+                            <label class="checkbox-block area">
+                          <input type="checkbox" class="area" name={{item?.id}} [checked]="item.selected" (click)="selectAreaSearch(item)">
+                          <span class="checkmark area"></span>
+                     </label>
+                            <span class="filter-text area">{{item?.name}}</span>
+                        </li>
+                    </ul>
+                    <ul class="filter-list area" *ngIf="frequentAreaList?.length == 0 || allFrequentAreaList?.length == 0" infiniteScroll (scrolled)="onAreaScroll($event)" [scrollWindow]="false">
+                        <li class="area" *ngFor="let item of existAreaList; let index = index;">
+                            <label class="checkbox-block area">
+                          <input type="checkbox" class="area" name={{item?.id}} [checked]="item.selected" (click)="selectAreaForSearch(item)">
+                          <span class="checkmark area"></span>
+                     </label>
+                            <span class="filter-text area">{{item?.name}}</span>
+                        </li>
+                    </ul>
+                    <ul class="btn-list area">
+                        <li class="area">
+                            <button *ngIf="!selectArea" class="btn-cancel btn-primary area" type="reset" (click)="cancelAreaASearchData()">Cancel</button>
+                            <button *ngIf="selectArea" class="btn-cancel btn-primary area" type="reset" (click)="clearAreaASearchData()">Clear</button>
+                        </li>
+                        <li class="area">
+                            <button class="btn-apply btn-primary area" type="submit" (click)="applyAearSearchOnData()">Apply</button>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li>
+                <button class="btn-dropbox btn-border date" type="button" (click)="applyDateFilter()" [ngClass]="{'selected': isDateFilter == true}">{{selectedDate}} <i class="fa fa-caret-down date"></i></button>
+                <div class="dropdown-menu date-dropdown date" *ngIf="isDateShow">
+                    <a class="dropdown-item date" href="javascript:void(0)" *ngFor="let item of dateArr" (click)="onSelectDateFilter(item)">
+                      {{item?.name}}
+                    </a>
+                </div>
+            </li>
+            <li>
+                <h6 class="clear-class" (click)="clearApplyFilter()">Clear <span *ngIf="searchCount > 0">{{searchCount}}</span></h6>
+            </li>
+        </ul>
+    </div>
+    <div *ngFor="let item of kolsData; let index = index;">
+        <div class="kol-block clearfix" *ngIf="item?.total_per > 0">
+            <ul class="name-section">
+                <li>
+                    {{item?.kol_full_name}}<span class=separator-circle></span>
+                </li>
+                <li *ngFor="let list of item?.kol_institutions">
+                    {{list?.name}} ({{list?.country}})<span class=separator-circle></span>
+                </li>
+            </ul>
+            <div fxLayout="row" fxLayoutGap="0px" [style.width.%]="item?.total_per">
+                <div fxFlex="{{item?.pubilication_per}}" style="height: 30px; background-color: #4e2a87"></div>
+                <div fxFlex="{{item?.twitter_per}}" style="height: 30px; background-color: #767171"></div>
+                <div fxFlex="{{item?.trial_per}}" style="height: 30px; background-color: #00b0f0"></div>
+            </div>
+            <ul class="type-section">
+                <li>
+                    Publications: {{item?.pubilication_count}}
+                </li>
+                <!-- <li>
+                    Tweets: {{item?.twitter_count}}
+                </li> -->
+                <li>
+                    Trials: {{item?.trial_count}}
+                </li>
+            </ul>
+        </div>
+        <div class="kol-block clearfix no-data" *ngIf="item?.total_per <= 0 && index == 0 && isApiLoad">
+            <div class="no-result-found">No results found.</div>
+            <div class="no-q-found"><a [routerLink]="['kol-request']">Questions?</a></div>
+        </div>
+    </div>
+    <div class="kol-block clearfix no-data" *ngIf="kolsData.length <= 0 && isApiLoad">
+        <div class="no-result-found">No results found.</div>
+        <div class="no-q-found"><a [routerLink]="['kol-request']">Questions?</a></div>
+    </div>
+</div>

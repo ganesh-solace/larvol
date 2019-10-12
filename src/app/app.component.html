@@ -1,0 +1,11 @@
+<ng-http-loader backgroundColor="#4e2a87" spinner="sk-three-bounce" class="http-loader" *ngIf="isShow"></ng-http-loader>
+<router-outlet></router-outlet>
+<app-footer *ngIf="isFooterShow"></app-footer>
+<toaster-container ></toaster-container>
+
+<!--Scroll to top-->
+<div class="scroll-to-top" [ngClass]="{'show-scrollTop': windowScrolled}">
+    <span (click)="scrollToTop()" title="Back to top">
+        <i class="fa fa-chevron-up"></i>
+    </span>
+</div>

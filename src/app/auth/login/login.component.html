@@ -1,0 +1,42 @@
+<app-header></app-header>
+<div class="login-sec">
+    <div class="container">
+        <div class="col-sm-12">
+            <div class="border-sec border-form form-sec">
+                <!-- <h2 class="text-center">Login</h2> -->
+                <div class="row">
+                    <div class="col-6 mx-auto">
+                        <form class="example-form" [formGroup]="loginForm" novalidate>
+                            <div class="form-group" [ngClass]="{'error': loginForm.controls.username.errors != null && loginForm.controls.username.touched == true}">
+                                <!-- <mat-form-field class="example-full-width"> -->
+                                <span class="icon"><i class="fa fa-user"></i></span>
+                                <input formControlName="username" onfocus="this.ph=this.placeholder;this.placeholder=''" onblur="this.placeholder = this.ph" type="input" placeholder="Email Address" class="form-control" maxlength="70">
+                                <span class="error" *ngIf="loginForm.controls.username.touched && loginForm.controls.username.errors?.required">*Please enter your email address.​</span>
+                                <span class="error" *ngIf="loginForm.controls.username.touched && (loginForm.controls.username.errors?.email || loginForm.controls.username.errors?.pattern)">*Please enter a valid email address.​</span>
+                                <!-- </mat-form-field>  -->
+                            </div>
+                            <div class="form-group field-pawd" [ngClass]="{'error': loginForm.controls.password.errors != null && loginForm.controls.password.touched == true}">
+                                <!-- <mat-form-field class="example-full-width "> -->
+                                <span class="icon"><i class="fa fa-lock"></i></span>
+                                <input formControlName="password" onfocus="this.ph=this.placeholder;this.placeholder=''" onblur="this.placeholder = this.ph" [type]="passwordType" placeholder="Password" class="form-control">
+                                <span class="icon-view" (click)="hideShowPassword()"><i class="fa" [ngClass]="{'fa-eye-slash': passwordType == 'password', 'fa-eye': passwordType == 'text'}"></i></span>
+                                <span class="error" *ngIf="loginForm.controls.password.touched && (loginForm.controls.password.errors?.required)">*Please enter your password.</span>
+                                <!-- </mat-form-field>  -->
+                            </div>
+                            <div class="text-right">
+                                <p><a href="#" title="Forgot Password" [routerLink]="['/auth/forgot-password']" routerLinkActive="active">Forgot Password?</a></p>
+                            </div>
+                            <div class="form-group text-center login-btn">
+                                <button class="btn btn-primary" type="submit" title="Login" tabindex="3" (click)="login()" [disabled]="!loginForm.valid">Login</button>
+                            </div>
+                            <div class="text-center">
+                                <p><a href="#" title="Create an account" [routerLink]="['/signup']" class="btn btn-primary btn-border">Create an account</a></p>
+                                <p class="error error-block" *ngIf="errorMsg">{{errorMsg}}</p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

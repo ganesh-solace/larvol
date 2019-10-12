@@ -1,0 +1,64 @@
+<div class="breadcrumbs-sec">
+    <div class="container">
+        <ul class="breadcrubs-list previous-page">
+            <li (click)="goBack()">
+                <a href="javascript:void(0)" title="Back to previous page">Back to previous page</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="sec-kols">
+    <div class="container">
+        <!-- listing content-->
+        <div class="kols-list" *ngIf="productsData?.length > 0 && isPageLoad" infiniteScroll (scrolled)="onScroll($event)">
+            <div class="kols-block" *ngFor="let item of productsData; let index = index; ">
+                <div class="row">
+                    <div class="col-md-10 col-10" (click)="openProductDetail(item)">
+                        <div class="info-sec">
+                            <h3>
+                                <a href="javascript:void(0)">{{item?.name}}</a>
+                            </h3>
+                            <p>
+                                <span>{{item?.institutions_list}}</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-2 badge-area">
+                        <div class="badge-sec">
+                            <span class="badge red-bg" *ngIf="item?.product_notification_count > 0" (click)="openProductDetail(item)">
+                                <!-- <span>{{item?.product_notification_count}}</span> -->
+                            <span *ngIf="item?.product_notification_count >= 1000">999+</span>
+                            <span *ngIf="item?.product_notification_count < 1000">{{item?.product_notification_count}}</span>
+                            </span>
+                            <app-drug-star-view [productData]="item" class="dashboard-fav"></app-drug-star-view>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bouncing-loader" *ngIf="isLoadMore">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <div class="no-result-foo">
+                <p class="no-result-helper-text">Didn’t find what you were looking for?
+                    <span>
+                        <a href="javascript:void(0)" (click)="openDrugRequestPage()">Let us know</a>
+                    </span> and we’ll add the drug you’re interested in.</p>
+            </div>
+        </div>
+        <!-- listing content end-->
+        <div class="kols-list no-kols" *ngIf="productsData?.length == 0 && isPageLoad">
+            <div class="no-kols-sec no-kol-content">
+                <p>Try again with a different search term.
+                    <br> Didn’t find what you were looking for?
+                    <span>
+                        <a href="javascript:void(0)" (click)="openDrugRequestPage()">Let us know</a>
+                    </span> and
+                    <br> we’ll add the drug you’re interested in.
+                </p>
+            </div>
+        </div>
+        <!--no data ends-->
+    </div>
+</div>

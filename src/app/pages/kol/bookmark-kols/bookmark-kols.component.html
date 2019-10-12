@@ -1,0 +1,802 @@
+<div class="breadcrumbs-sec">
+    <div class="container">
+        <!-- <h1>Bookmark KOLs</h1>             -->
+        <ul class="breadcrubs-list previous-page">
+            <li (click)="goBack()">
+                <a href="javascript:void(0)" title="Back to previous page">Back to previous page</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="sec-kols">
+    <div class="container no-padding" (window:scroll)="onWindowScroll($event)" (window:resize)="onResize($event)" infiniteScroll (scrolled)="onScroll($event)">
+        <div class="kols-list" id="kolInfo" #kolInfo>
+            <div class="kol-tab-sec kol-bookmark-tab">
+                <mat-tab-group (selectedTabChange)="changeTabsData($event)" [(selectedIndex)]="selectedTab">
+                    <mat-tab>
+                        <ng-template mat-tab-label>
+                            News
+                            <span class="count-no">({{newsSettingsData?.news_bookmark_count}})</span>
+                        </ng-template>
+                        <div class="tab-content">
+                            <div class="has-content" *ngIf="newsData?.length > 0 && isNewsPageLoad && isPageLoad">
+                                <div class="news-block" *ngFor="let item of newsData; let index = index" id="news_{{item?.id}}" [ngClass]="{'new-notification' : item.read_status == 0}">
+                                    <h4>
+                                        <a href="{{item?.url}}" target="{{item?.target}}">
+                                            <span class="item-title"><strong [innerHTML]="item?.title"></strong> <span *ngIf="item?.news_sources?.length > 0"> ({{item?.news_sources[0]?.display_name}})</span></span>
+                                        </a>
+                                        <a href="javascript:void(0)" class="normal-text">
+                                            <span class="item-description" *ngIf="item?.summary" [innerHTML]="item?.summary"></span>
+                                            <span class="tag-list">
+                                                <span class="font-purple" *ngFor="let topic of item?.news_topics;let last = last">
+                                                    {{topic?.tag}}
+                                                </span>
+                                            <span class="font-purple" *ngFor="let product of item?.news_products;let last = last">
+                                                    {{getProductName(product?.name)}}
+                                                </span>
+                                            <span class="font-purple" *ngFor="let institute of item?.companies;let last = last">
+                                                    {{institute?.name}}
+                                                </span>
+                                            </span>
+                                        </a>
+                                        <!--bookmark icon start-->
+                                        <span class="icon-bookmark" (click)="addNewsItemToBookmark(item, index)" title="{{getTooltipData(item)}}"><i
+                                                class="fa" [ngClass]="{'fa-bookmark' : item?.is_bookmark == true, 'fa-bookmark-o' : item?.is_bookmark == false}"></i></span>
+                                        <!--bookmark icon end-->
+                                    </h4>
+                                    <h4 *ngIf="item?.kols?.length > 0">
+                                        <span class="tag-list">
+                                            <span class="font-purple" *ngFor="let kol of item?.kols;let last = last">
+                                                {{kol?.kapp_full_name}}
+                                            </span>
+                                        </span>
+                                    </h4>
+                                    <!-- <h4 *ngIf="item?.products?.length > 0">
+                                        <span class="tag-list">
+                                            <span class="font-purple" *ngFor="let product of item?.products;let last = last">
+                                                {{product?.name}}
+                                            </span>
+                                        </span>
+                                    </h4> -->
+                                    <span class="img-sec" *ngIf="item?.images?.original?.length > 0">
+                                        <img [src]="item?.images?.original[0]" alt="image" (click)="showPopup(item)">
+                                    </span>
+                                    <span class="posted-time" *ngIf="item?.display_date">{{item?.display_date |
+                                        timeAgo}}</span>
+                                    <div class="action-sec clearfix">
+                                        <div class="row">
+                                            <div class="col-lg-7">
+                                                <ul class="list-left">
+                                                    <li (click)="likeNews(item)" *ngIf="newsSettingsData?.can_like">
+                                                        <a href="javascript:void(0)" title="Like" class="action-icon">
+                                                            <i class="fa" [ngClass]="{'fa-thumbs-up': item?.like_enabled == false, 'fa-thumbs-o-up': item?.like_enabled == true}"></i>
+                                                        </a>
+                                                        <a class="action-text" [ngClass]="{'primary-color': item?.like_enabled == false}" href="javascript:void(0)">Like</a>
+                                                    </li>
+                                                    <li *ngIf="newsSettingsData?.can_comment">
+                                                        <a href="javascript:void(0)" title="Comment" class="action-icon">
+                                                            <i class="fa fa-comment-o"></i>
+                                                        </a>
+                                                        <a class="action-text" href="javascript:void(0)" (click)="hideShowComment(item);" id="{{item.id}}" #{{item.id}}>Comment</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0)" (click)="sharePopup(item);" title="Share" class="action-icon">
+                                                            <i class="fa fa-share"></i>
+                                                        </a>
+                                                        <a class="action-text" href="javascript:void(0)" (click)="sharePopup(item);">Share</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-lg-5 text-right">
+                                                <ul class="list-right">
+                                                    <li *ngIf="newsSettingsData?.can_like">
+                                                        <a class="action-text" href="javascript:void(0)" (click)="openLikesList(item)" id="like_{{item.id}}">
+                                                            <span *ngIf="item?.like_count < 2">{{item?.like_count}}
+                                                                Like</span>
+                                                            <span *ngIf="item?.like_count > 1">{{item?.like_count}}
+                                                                Likes</span>
+                                                            <span *ngIf="item?.like_count > 1000">999+ Likes</span>
+                                                        </a>
+                                                    </li>
+                                                    <li *ngIf="newsSettingsData?.can_comment">
+                                                        <a class="action-text" href="javascript:void(0)" (click)="hideShowComment(item);">
+                                                            <span *ngIf="item?.comment_count < 2">{{item?.comment_count}}
+                                                                Comment</span>
+                                                            <span *ngIf="item?.comment_count > 1">{{item?.comment_count}}
+                                                                Comments</span>
+                                                            <span *ngIf="item?.comment_count > 1000">999+ Comments</span>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="action-text" href="javascript:void(0)">
+                                                            <span *ngIf="item?.shared_count < 2">{{item?.shared_count}}
+                                                                Share</span>
+                                                            <span *ngIf="item?.shared_count > 1">{{item?.shared_count}}
+                                                                Shares</span>
+                                                            <span *ngIf="item?.shared_count > 1000">999+ Shares</span>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="comment-sec showComment" *ngIf="item?.isShow">
+                                        <p class="view-more" *ngIf="item?.settingData?.next_page">View more comments</p>
+                                        <div class="comment-list">
+                                            <div class="comment-block" *ngFor="let list of item?.comments">
+                                                <div class="user-sec" *ngIf="!item?.user?.image_url" [ngClass]="{'img-round-sec' : item?.user?.image_url == null}">
+                                                    <!-- <img src="../../../assets/images/default-user.png" alt="{{list?.user?.full_name}}"> -->
+                                                    <span class="text-round">{{getNameInitials(list?.user)}}</span>
+                                                </div>
+                                                <div class="user-sec" *ngIf="item?.image_url">
+                                                    <img [src]="item?.user?.image_url" alt="{{list?.user?.full_name}}">
+                                                </div>
+                                                <div class="user-name">
+                                                    <h4>
+                                                        <a href="javascript:void(0)">{{list?.user?.full_name}}</a>
+                                                    </h4>
+                                                    <p [innerHTML]="list?.comment"></p>
+                                                </div>
+                                                <div class="posted-time" *ngIf="item?.display_date">
+                                                    <span>{{list?.display_date | timeAgo}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="comment-form comment-block">
+                                            <div class="user-sec" *ngIf="usersData?.image_url">
+                                                <img [src]="usersData?.image_url" alt="{{usersData?.full_name}}">
+                                            </div>
+                                            <div class="user-sec" *ngIf="!usersData?.image_url" [ngClass]="{'img-round-sec' : usersData?.image_url == null}">
+                                                <!-- <img src="../../../assets/images/default-user.png" alt="{{KOLsData?.kol_full_name}}"> -->
+                                                <span class="text-round">{{getNameInitials(usersData)}}</span>
+                                            </div>
+                                            <div class="comment-input user-name">
+                                                <!-- <input class="form-control" type="text"  placeholder="Add a comment" [(ngModel)]="item.commentText" id="myinputtext_{{item.id}}" (focus)="commentFocus($event, item.id)"> -->
+                                                <div data-placeholder="Add a comment" onfocus="this.ph=this.placeholder;this.placeholder=''" onblur="this.placeholder = this.ph" role="textbox" class="form-control input-tag comment-box single-line comment" [ngClass]="{'is-comment': item.commentText == '' || item.commentText == null}"
+                                                    contenteditable="true" (focus)="commentFocus($event, item)" (input)="openUserList($event, item)" (textinput)="openUserList($event, item)" id="myinputtext_{{item.id}}" (keydown)="onKeydown($event)">
+                                                </div>
+                                                <div class="user-name-popup comment" *ngIf="item?.showUserList && userList?.length > 0 && isShow">
+                                                    <ul class="comment">
+                                                        <li class="comment" *ngFor="let list of userList" (click)="selectUserForComment(list, item)">
+                                                            <span class="profile-img comment" *ngIf="list?.image_url"><img [src]="list?.image_url"></span>
+                                                            <span class="profile-img comment" *ngIf="!list?.image_url" [ngClass]="{'img-round-sec' : list?.image_url == null}">
+                                                                    <span class="text-round comment">{{getNameInitials(list)}}</span>
+                                                            </span>
+                                                            <span class="profile-name comment">{{list?.first_name}} {{list?.last_name}}</span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="posted-time">
+                                                <span>
+                                                    <button class="btn btn-primary" type="submit" [disabled]="checkValidValue(item.commentText)" (click)="addCommentForNews(item)">Post
+                                                        <img src="./assets/images/right-arrow.png">
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="bouncing-loader" *ngIf="isNewsLoad">
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                            </div>
+                            <div class="no-content" *ngIf="newsData?.length == 0 && isNewsPageLoad">
+                                <h3>No Bookmarks</h3>
+                            </div>
+                        </div>
+                    </mat-tab>
+                    <mat-tab>
+                        <ng-template mat-tab-label>
+                            Events
+                            <span class="count-no">({{newsSettingsData?.event_bookmark_count}})</span>
+                        </ng-template>
+                        <div class="tab-content">
+                            <div class="has-content" *ngIf="eventsData?.length > 0">
+                                <div class="news-block event-block" *ngFor="let item of eventsData; let index = index" id="event_{{item?.id}}" [ngClass]="{'new-notification' : item.read_status == 0}">
+                                    <h4>
+                                        <!--bookmark sec start-->
+                                        <span class="icon-bookmark" (click)="addNewsItemToBookmark(item, index)" title="{{getTooltipData(item)}}"><i
+                                                class="fa" [ngClass]="{'fa-bookmark' : item?.is_bookmark == true, 'fa-bookmark-o' : item?.is_bookmark == false}"></i></span>
+                                        <!--bookmark sec end-->
+                                        <span class="item-title">
+                                            <strong>{{item?.presentation_date | date:'LLL dd, yyyy'}}<span *ngIf="item?.presentation_enddate && item?.presentation_enddate != '0000-00-00 00:00:00'">
+                                                    - </span>{{item?.presentation_enddate | date:'LLL dd, yyyy'}}<span *ngIf="item?.location">; {{item?.location}}</span>
+                                        <!-- <span *ngIf="item?.city || item?.state || item?.country">; </span><span *ngIf="item?.city">{{item?.city}}</span>
+                                        <span *ngIf="item?.city && (item?.state || item?.country)">,
+                                            </span>{{item?.state}}<span *ngIf="item?.state && item?.country">,
+                                                </span>{{item?.country}} -->
+                                        </strong>
+                                        </span>
+                                        <span class="item-title">
+                                            <a href="{{item?.url}}" target="{{item?.target}}">
+                                                <strong [innerHTML]="item?.title"></strong>
+                                                <span *ngIf="item?.news_sources?.length > 0"> ({{item?.news_sources[0]?.display_name}})</span>
+                                        </a>
+                                        </span>
+                                        <a href="javascript:void(0)" class="normal-text">
+                                            <span class="item-description" *ngIf="item?.summary" [innerHTML]="item?.summary"></span>
+                                            <span class="tag-list">
+                                                <span class="font-purple" *ngFor="let topic of item?.news_topics;let last = last">
+                                                    {{topic?.tag}}
+                                                    <!-- <span *ngIf="!last"> | </span> -->
+                                            </span>
+                                            <span class="font-purple" *ngFor="let product of item?.news_products;let last = last">
+                                                    {{getProductName(product?.name)}}
+                                                </span>
+                                            <span class="font-purple" *ngFor="let institute of item?.companies;let last = last">
+                                                    {{institute?.name}}
+                                                    <span *ngIf="!last" class="last-tag">
+                                                        <!----></span>
+                                            </span>
+                                            </span>
+                                        </a>
+                                    </h4>
+                                    <h4 *ngIf="item?.kols?.length > 0">
+                                        <span class="tag-list">
+                                            <span class="font-purple" *ngFor="let kol of item?.kols;let last = last">
+                                                {{kol?.kapp_full_name}}
+                                            </span>
+                                        </span>
+                                    </h4>
+                                    <div class="action-sec clearfix">
+                                        <div class="row">
+                                            <div class="col-lg-7">
+                                                <ul class="list-left">
+                                                    <li (click)="likeNews(item)" *ngIf="eventsSettingsData?.can_like">
+                                                        <a href="javascript:void(0)" title="Like" class="action-icon">
+                                                            <i class="fa" [ngClass]="{'fa-thumbs-up': item?.like_enabled == false, 'fa-thumbs-o-up': item?.like_enabled == true}"></i>
+                                                        </a>
+                                                        <a class="action-text" [ngClass]="{'primary-color': item?.like_enabled == false}" href="javascript:void(0)">Like</a>
+                                                    </li>
+                                                    <li *ngIf="eventsSettingsData?.can_comment">
+                                                        <a href="javascript:void(0)" title="Comment" class="action-icon">
+                                                            <i class="fa fa-comment-o"></i>
+                                                        </a>
+                                                        <a class="action-text" href="javascript:void(0)" (click)="hideShowComment(item);" id="{{item.id}}" #{{item.id}}>Comment</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0)" (click)="sharePopup(item);" title="Share" class="action-icon">
+                                                            <i class="fa fa-share"></i>
+                                                        </a>
+                                                        <a class="action-text" href="javascript:void(0)" (click)="sharePopup(item);">Share</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-lg-5 text-right">
+                                                <ul class="list-right">
+                                                    <li *ngIf="eventsSettingsData?.can_like">
+                                                        <a class="action-text" href="javascript:void(0)" (click)="openLikesList(item)" id="eventlike_{{item.id}}">
+                                                            <span *ngIf="item?.like_count < 2">{{item?.like_count}}
+                                                                Like</span>
+                                                            <span *ngIf="item?.like_count > 1">{{item?.like_count}}
+                                                                Likes</span>
+                                                            <span *ngIf="item?.like_count > 1000">999+ Likes</span>
+                                                        </a>
+                                                    </li>
+                                                    <li *ngIf="eventsSettingsData?.can_comment">
+                                                        <a class="action-text" href="javascript:void(0)" (click)="hideShowComment(item);">
+                                                            <span *ngIf="item?.comment_count < 2">{{item?.comment_count}}
+                                                                Comment</span>
+                                                            <span *ngIf="item?.comment_count > 1">{{item?.comment_count}}
+                                                                Comments</span>
+                                                            <span *ngIf="item?.comment_count > 1000">999+ Comments</span>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="action-text" href="javascript:void(0)">
+                                                            <span *ngIf="item?.shared_count < 2">{{item?.shared_count}}
+                                                                Share</span>
+                                                            <span *ngIf="item?.shared_count > 1">{{item?.shared_count}}
+                                                                Shares</span>
+                                                            <span *ngIf="item?.shared_count > 1000">999+ Shares</span>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="comment-sec showComment" *ngIf="item?.isShow">
+                                        <p class="view-more" *ngIf="item?.settingData?.next_page">View more comments</p>
+                                        <div class="comment-list">
+                                            <div class="comment-block" *ngFor="let list of item?.comments">
+                                                <div class="user-sec" *ngIf="!item?.user?.image_url" [ngClass]="{'img-round-sec' : item?.user?.image_url == null}">
+                                                    <!-- <img src="../../../assets/images/default-user.png" alt="{{list?.user?.full_name}}"> -->
+                                                    <span class="text-round">{{getNameInitials(list?.user)}}</span>
+                                                </div>
+                                                <div class="user-sec" *ngIf="item?.image_url">
+                                                    <img [src]="item?.user?.image_url" alt="{{list?.user?.full_name}}">
+                                                </div>
+                                                <div class="user-name">
+                                                    <h4>
+                                                        <a href="javascript:void(0)">{{list?.user?.full_name}}</a>
+                                                    </h4>
+                                                    <p [innerHTML]="list?.comment"></p>
+                                                </div>
+                                                <div class="posted-time" *ngIf="item?.display_date">
+                                                    <span>{{list?.display_date | timeAgo}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="comment-form comment-block">
+                                            <div class="user-sec" *ngIf="usersData?.image_url">
+                                                <img [src]="usersData?.image_url" alt="{{usersData?.full_name}}">
+                                            </div>
+                                            <div class="user-sec" *ngIf="!usersData?.image_url" [ngClass]="{'img-round-sec' : usersData?.image_url == null}">
+                                                <!-- <img src="../../../assets/images/default-user.png" alt="{{KOLsData?.kol_full_name}}"> -->
+                                                <span class="text-round">{{getNameInitials(usersData)}}</span>
+                                            </div>
+                                            <div class="comment-input user-name">
+                                                <div data-placeholder="Add a comment" onfocus="this.ph=this.placeholder;this.placeholder=''" onblur="this.placeholder = this.ph" role="textbox" class="form-control input-tag comment-box single-line comment" [ngClass]="{'is-comment': item.commentText == '' || item.commentText == null}"
+                                                    contenteditable="true" (focus)="commentFocus($event, item)" (input)="openUserList($event, item)" (textinput)="openUserList($event, item)" id="myinputtext_{{item.id}}" (keydown)="onKeydown($event)">
+                                                </div>
+                                                <div class="user-name-popup comment" *ngIf="item?.showUserList && userList?.length > 0 && isShow">
+                                                    <ul class="comment">
+                                                        <li class="comment" *ngFor="let list of userList" (click)="selectUserForComment(list, item)">
+                                                            <span class="profile-img comment" *ngIf="list?.image_url"><img [src]="list?.image_url"></span>
+                                                            <span class="profile-img comment" *ngIf="!list?.image_url" [ngClass]="{'img-round-sec' : list?.image_url == null}">
+                                                                    <span class="text-round comment">{{getNameInitials(list)}}</span>
+                                                            </span>
+                                                            <span class="profile-name comment">{{list?.first_name}} {{list?.last_name}}</span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="posted-time">
+                                                <span>
+                                                    <button class="btn btn-primary" type="submit" [disabled]="checkValidValue(item.commentText)" (click)="addCommentForNews(item)">Post
+                                                        <img src="./assets/images/right-arrow.png">
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <span class="action-calendar" *ngIf="item?.startDateTime != null &&
+                                                item?.startDateTime != '' &&
+                                                item?.endDateTime != null &&
+                                                item?.endDateTime != '' ">
+                                        <a href="javascript:void(0)" title="Add Event" class="action-icon calendar-icon" (click)="addEventToCalendar(item)">
+                                            <i class="fa fa-calendar"></i>
+                                        </a>
+                                    </span>
+                                </div>
+                                <div class="bouncing-loader" *ngIf="isEventLoad">
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                            </div>
+                            <div class="no-content" *ngIf="eventsData?.length == 0">
+                                <h3>No Bookmarks</h3>
+                            </div>
+                        </div>
+                    </mat-tab>
+
+                    <mat-tab>
+                        <ng-template mat-tab-label>
+                            Conferences
+                            <span class="count-no">({{newsSettingsData?.conference_bookmark_count}})</span>
+                        </ng-template>
+                        <div class="tab-content">
+                            <div class="has-content" *ngIf="conferenceData?.length > 0 && isConferenceLoad">
+                                <div class="news-block" *ngFor="let item of conferenceData; let index = index" id="news_{{item?.id}}" [ngClass]="{'new-notification' : item.read_status == 0}">
+                                    <h4>
+                                        <a href="{{item?.url}}" target="{{item?.target}}">
+                                            <span class="item-title"><strong [innerHTML]="item?.title"></strong> <span *ngIf="item?.news_sources?.length > 0"> ({{item?.news_sources[0]?.display_name}})</span></span>
+                                        </a>
+                                        <a href="javascript:void(0)" class="normal-text">
+                                            <span class="item-description" *ngIf="item?.summary" [innerHTML]="item?.summary"></span>
+                                            <span class="tag-list">
+                                              <span class="font-purple" *ngFor="let topic of item?.news_topics;let last = last">
+                                                  {{topic?.tag}}
+                                              </span>
+                                            <span class="font-purple" *ngFor="let product of item?.news_products;let last = last">
+                                                  {{getProductName(product?.name)}}
+                                              </span>
+                                            <span class="font-purple" *ngFor="let institute of item?.companies;let last = last">
+                                                  {{institute?.name}}
+                                              </span>
+                                            </span>
+                                        </a>
+                                        <!--bookmark icon start-->
+                                        <span class="icon-bookmark" (click)="addNewsItemToBookmark(item, index)" title="{{getTooltipData(item)}}"><i
+                                              class="fa" [ngClass]="{'fa-bookmark' : item?.is_bookmark == true, 'fa-bookmark-o' : item?.is_bookmark == false}"></i></span>
+                                        <!--bookmark icon end-->
+                                    </h4>
+                                    <h4 *ngIf="item?.kols?.length > 0">
+                                        <span class="tag-list">
+                                          <span class="font-purple" *ngFor="let kol of item?.kols;let last = last">
+                                              {{kol?.kapp_full_name}}
+                                          </span>
+                                        </span>
+                                    </h4>
+                                    <!-- <h4 *ngIf="item?.products?.length > 0">
+                                        <span class="tag-list">
+                                          <span class="font-purple" *ngFor="let product of item?.products;let last = last">
+                                              {{product?.name}}
+                                          </span>
+                                        </span>
+                                    </h4> -->
+                                    <span class="img-sec" *ngIf="item?.images?.original?.length > 0">
+                                      <img [src]="item?.images?.original[0]" alt="image" (click)="showPopup(item)">
+                                  </span>
+                                    <span class="posted-time" *ngIf="item?.display_date">{{item?.display_date |
+                                      timeAgo}}</span>
+                                    <div class="action-sec clearfix">
+                                        <div class="row">
+                                            <div class="col-lg-7">
+                                                <ul class="list-left">
+                                                    <li (click)="likeNews(item)" *ngIf="newsSettingsData?.can_like">
+                                                        <a href="javascript:void(0)" title="Like" class="action-icon">
+                                                            <i class="fa" [ngClass]="{'fa-thumbs-up': item?.like_enabled == false, 'fa-thumbs-o-up': item?.like_enabled == true}"></i>
+                                                        </a>
+                                                        <a class="action-text" [ngClass]="{'primary-color': item?.like_enabled == false}" href="javascript:void(0)">Like</a>
+                                                    </li>
+                                                    <li *ngIf="newsSettingsData?.can_comment">
+                                                        <a href="javascript:void(0)" title="Comment" class="action-icon">
+                                                            <i class="fa fa-comment-o"></i>
+                                                        </a>
+                                                        <a class="action-text" href="javascript:void(0)" (click)="hideShowComment(item);" id="{{item.id}}" #{{item.id}}>Comment</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0)" (click)="sharePopup(item);" title="Share" class="action-icon">
+                                                            <i class="fa fa-share"></i>
+                                                        </a>
+                                                        <a class="action-text" href="javascript:void(0)" (click)="sharePopup(item);">Share</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-lg-5 text-right">
+                                                <ul class="list-right">
+                                                    <li *ngIf="newsSettingsData?.can_like">
+                                                        <a class="action-text" href="javascript:void(0)" (click)="openLikesList(item)" id="like_{{item.id}}">
+                                                            <span *ngIf="item?.like_count < 2">{{item?.like_count}}
+                                                              Like</span>
+                                                            <span *ngIf="item?.like_count > 1">{{item?.like_count}}
+                                                              Likes</span>
+                                                            <span *ngIf="item?.like_count > 1000">999+ Likes</span>
+                                                        </a>
+                                                    </li>
+                                                    <li *ngIf="newsSettingsData?.can_comment">
+                                                        <a class="action-text" href="javascript:void(0)" (click)="hideShowComment(item);">
+                                                            <span *ngIf="item?.comment_count < 2">{{item?.comment_count}}
+                                                              Comment</span>
+                                                            <span *ngIf="item?.comment_count > 1">{{item?.comment_count}}
+                                                              Comments</span>
+                                                            <span *ngIf="item?.comment_count > 1000">999+ Comments</span>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="action-text" href="javascript:void(0)">
+                                                            <span *ngIf="item?.shared_count < 2">{{item?.shared_count}}
+                                                              Share</span>
+                                                            <span *ngIf="item?.shared_count > 1">{{item?.shared_count}}
+                                                              Shares</span>
+                                                            <span *ngIf="item?.shared_count > 1000">999+ Shares</span>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="comment-sec showComment" *ngIf="item?.isShow">
+                                        <p class="view-more" *ngIf="item?.settingData?.next_page">View more comments</p>
+                                        <div class="comment-list">
+                                            <div class="comment-block" *ngFor="let list of item?.comments">
+                                                <div class="user-sec" *ngIf="!item?.user?.image_url" [ngClass]="{'img-round-sec' : item?.user?.image_url == null}">
+                                                    <!-- <img src="../../../assets/images/default-user.png" alt="{{list?.user?.full_name}}"> -->
+                                                    <span class="text-round">{{getNameInitials(list?.user)}}</span>
+                                                </div>
+                                                <div class="user-sec" *ngIf="item?.image_url">
+                                                    <img [src]="item?.user?.image_url" alt="{{list?.user?.full_name}}">
+                                                </div>
+                                                <div class="user-name">
+                                                    <h4>
+                                                        <a href="javascript:void(0)">{{list?.user?.full_name}}</a>
+                                                    </h4>
+                                                    <p [innerHTML]="list?.comment"></p>
+                                                </div>
+                                                <div class="posted-time" *ngIf="item?.display_date">
+                                                    <span>{{list?.display_date | timeAgo}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="comment-form comment-block">
+                                            <div class="user-sec" *ngIf="usersData?.image_url">
+                                                <img [src]="usersData?.image_url" alt="{{usersData?.full_name}}">
+                                            </div>
+                                            <div class="user-sec" *ngIf="!usersData?.image_url" [ngClass]="{'img-round-sec' : usersData?.image_url == null}">
+                                                <!-- <img src="../../../assets/images/default-user.png" alt="{{KOLsData?.kol_full_name}}"> -->
+                                                <span class="text-round">{{getNameInitials(usersData)}}</span>
+                                            </div>
+                                            <div class="comment-input user-name">
+                                                <!-- <input class="form-control" type="text"  placeholder="Add a comment" [(ngModel)]="item.commentText" id="myinputtext_{{item.id}}" (focus)="commentFocus($event, item.id)"> -->
+                                                <div data-placeholder="Add a comment" onfocus="this.ph=this.placeholder;this.placeholder=''" onblur="this.placeholder = this.ph" role="textbox" class="form-control input-tag comment-box single-line comment" [ngClass]="{'is-comment': item.commentText == '' || item.commentText == null}"
+                                                    contenteditable="true" (focus)="commentFocus($event, item)" (input)="openUserList($event, item)" (textinput)="openUserList($event, item)" id="myinputtext_{{item.id}}" (keydown)="onKeydown($event)">
+                                                </div>
+                                                <div class="user-name-popup comment" *ngIf="item?.showUserList && userList?.length > 0 && isShow">
+                                                    <ul class="comment">
+                                                        <li class="comment" *ngFor="let list of userList" (click)="selectUserForComment(list, item)">
+                                                            <span class="profile-img comment" *ngIf="list?.image_url"><img [src]="list?.image_url"></span>
+                                                            <span class="profile-img comment" *ngIf="!list?.image_url" [ngClass]="{'img-round-sec' : list?.image_url == null}">
+                                                                  <span class="text-round comment">{{getNameInitials(list)}}</span>
+                                                            </span>
+                                                            <span class="profile-name comment">{{list?.first_name}} {{list?.last_name}}</span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="posted-time">
+                                                <span>
+                                                  <button class="btn btn-primary" type="submit" [disabled]="checkValidValue(item.commentText)" (click)="addCommentForNews(item)">Post
+                                                      <img src="./assets/images/right-arrow.png">
+                                                  </button>
+                                              </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="bouncing-loader" *ngIf="isNewsLoad">
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                            </div>
+                            <div class="no-content" *ngIf="conferenceData?.length == 0 && isConferenceLoad">
+                                <h3>No Bookmarks</h3>
+                            </div>
+                        </div>
+                    </mat-tab>
+
+                    <mat-tab>
+                        <ng-template mat-tab-label>
+                            Tweets
+                            <span class="count-no">({{newsSettingsData?.twitter_bookmark_count}})</span>
+                        </ng-template>
+                        <div class="tab-content">
+                            <div class="has-content" *ngIf="twittersData?.length > 0">
+                                <div class="news-block" *ngFor="let item of twittersData; let index = index;" id="tweets_{{item?.id}}" [ngClass]="{'new-notification' : item.read_status == 0}">
+                                    <h4>
+                                        <a href="{{item?.url}}" target="{{item?.target}}">
+                                            <span class="item-title"><strong [innerHTML]="item?.title"></strong>
+                                              <!-- <span *ngIf="item?.news_sources?.length > 0"> ({{item?.news_sources[0]?.display_name}})</span> -->
+                                            <span *ngIf="item?.source"> ({{item?.source}})</span>
+                                            </span>
+                                            <!-- <span class="item-description" *ngIf="item?.summary">{{item?.summary}}</span> -->
+                                        </a>
+                                        <a href="javascript:void(0)" class="normal-text">
+                                            <span class="tag-list">
+                                                <span class="font-purple" *ngFor="let topic of item?.news_topics;let last = last">
+                                                    {{topic?.tag}}
+                                                    <span *ngIf="!last">
+                                                        <!----></span>
+                                            </span>
+                                            <span class="font-purple" *ngFor="let product of item?.news_products;let last = last">
+                                                    {{getProductName(product?.name)}}
+                                                </span>
+                                            <span class="font-purple" *ngFor="let institute of item?.companies;let last = last">
+                                                    {{institute?.name}}
+                                                    <span *ngIf="!last" class="last-tag">
+                                                        <!----></span>
+                                            </span>
+                                            </span>
+                                        </a>
+                                        <!--bookmark sec start-->
+                                        <span class="icon-bookmark" (click)="addNewsItemToBookmark(item, index)" title="{{getTooltipData(item)}}"><i
+                                                class="fa" [ngClass]="{'fa-bookmark' : item?.is_bookmark == true, 'fa-bookmark-o' : item?.is_bookmark == false}"></i></span>
+                                        <!--bookmark sec end-->
+                                    </h4>
+                                    <h4 *ngIf="item?.kols?.length > 0">
+                                        <span class="tag-list">
+                                            <span class="font-purple" *ngFor="let kol of item?.kols;let last = last">
+                                                {{kol?.kapp_full_name}}
+                                            </span>
+                                        </span>
+                                    </h4>
+                                    <!-- <h4 *ngIf="item?.products?.length > 0">
+                                        <span class="tag-list">
+                                            <span class="font-purple" *ngFor="let product of item?.products;let last = last">
+                                                {{product?.name}}
+                                            </span>
+                                        </span>
+                                    </h4> -->
+                                    <span class="img-sec" *ngIf="item?.images?.original?.length > 0">
+                                        <img [src]="item?.images?.original[0]" alt="image" (click)="showPopup(item)">
+                                    </span>
+                                    <span class="posted-time" *ngIf="item?.display_date">{{item?.display_date |
+                                        timeAgo}}</span>
+                                    <div class="action-sec clearfix">
+                                        <div class="row">
+                                            <div class="col-lg-7">
+                                                <ul class="list-left">
+                                                    <li (click)="likeNews(item)" *ngIf="newsSettingsData?.can_like">
+                                                        <a href="javascript:void(0)" title="Like" class="action-icon">
+                                                            <i class="fa" [ngClass]="{'fa-thumbs-up': item?.like_enabled == false, 'fa-thumbs-o-up': item?.like_enabled == true}"></i>
+                                                        </a>
+                                                        <a class="action-text" [ngClass]="{'primary-color': item?.like_enabled == false}" href="javascript:void(0)">Like</a>
+                                                    </li>
+                                                    <li *ngIf="newsSettingsData?.can_comment">
+                                                        <a href="javascript:void(0)" title="Comment" class="action-icon">
+                                                            <i class="fa fa-comment-o"></i>
+                                                        </a>
+                                                        <a class="action-text" href="javascript:void(0)" (click)="hideShowComment(item);" id="{{item.id}}" #{{item.id}}>Comment</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0)" (click)="sharePopup(item);" title="Share" class="action-icon">
+                                                            <i class="fa fa-share"></i>
+                                                        </a>
+                                                        <a class="action-text" href="javascript:void(0)" (click)="sharePopup(item);">Share</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-lg-5 text-right">
+                                                <ul class="list-right">
+                                                    <li *ngIf="newsSettingsData?.can_like">
+                                                        <a class="action-text" href="javascript:void(0)" (click)="openLikesList(item)" id="tweetlike_{{item.id}}">
+                                                            <span *ngIf="item?.like_count < 2">{{item?.like_count}}
+                                                                Like</span>
+                                                            <span *ngIf="item?.like_count > 1">{{item?.like_count}}
+                                                                Likes</span>
+                                                            <span *ngIf="item?.like_count > 1000">999+ Likes</span>
+                                                        </a>
+                                                    </li>
+                                                    <li *ngIf="newsSettingsData?.can_comment">
+                                                        <a class="action-text" href="javascript:void(0)" (click)="hideShowComment(item);">
+                                                            <span *ngIf="item?.comment_count < 2">{{item?.comment_count}}
+                                                                Comment</span>
+                                                            <span *ngIf="item?.comment_count > 1">{{item?.comment_count}}
+                                                                Comments</span>
+                                                            <span *ngIf="item?.comment_count > 1000">999+ Comments</span>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="action-text" href="javascript:void(0)">
+                                                            <span *ngIf="item?.shared_count < 2">{{item?.shared_count}}
+                                                                Share</span>
+                                                            <span *ngIf="item?.shared_count > 1">{{item?.shared_count}}
+                                                                Shares</span>
+                                                            <span *ngIf="item?.shared_count > 1000">999+ Shares</span>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="comment-sec showComment" *ngIf="item?.isShow">
+                                        <p class="view-more" *ngIf="item?.settingData?.next_page">View more comments</p>
+                                        <div class="comment-list">
+                                            <div class="comment-block" *ngFor="let list of item?.comments">
+                                                <div class="user-sec" *ngIf="!item?.user?.image_url" [ngClass]="{'img-round-sec' : item?.user?.image_url == null}">
+                                                    <!-- <img src="../../../assets/images/default-user.png" alt="{{list?.user?.full_name}}"> -->
+                                                    <span class="text-round">{{getNameInitials(list?.user)}}</span>
+                                                </div>
+                                                <div class="user-sec" *ngIf="item?.image_url">
+                                                    <img [src]="item?.user?.image_url" alt="{{list?.user?.full_name}}">
+                                                </div>
+                                                <div class="user-name">
+                                                    <h4>
+                                                        <a href="javascript:void(0)">{{list?.user?.full_name}}</a>
+                                                    </h4>
+                                                    <p [innerHTML]="list?.comment"></p>
+                                                </div>
+                                                <div class="posted-time" *ngIf="item?.display_date">
+                                                    <span>{{list?.display_date | timeAgo}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="comment-form comment-block">
+                                            <div class="user-sec" *ngIf="usersData?.image_url">
+                                                <img [src]="usersData?.image_url" alt="{{usersData?.full_name}}">
+                                            </div>
+                                            <div class="user-sec" *ngIf="!usersData?.image_url" [ngClass]="{'img-round-sec' : usersData?.image_url == null}">
+                                                <!-- <img src="../../../assets/images/default-user.png" alt="{{KOLsData?.kol_full_name}}"> -->
+                                                <span class="text-round">{{getNameInitials(usersData)}}</span>
+                                            </div>
+                                            <div class="comment-input user-name">
+                                                <!-- <input class="form-control" type="text" placeholder="Add a comment" [(ngModel)]="item.commentText" id="myinputtext_{{item.id}}" (focus)="commentFocus($event, item.id)"> -->
+                                                <div data-placeholder="Add a comment" onfocus="this.ph=this.placeholder;this.placeholder=''" onblur="this.placeholder = this.ph" role="textbox" class="form-control input-tag comment-box single-line comment" [ngClass]="{'is-comment': item.commentText == '' || item.commentText == null}"
+                                                    contenteditable="true" (focus)="commentFocus($event, item)" (input)="openUserList($event, item)" (textinput)="openUserList($event, item)" id="myinputtext_{{item.id}}" (keydown)="onKeydown($event)">
+                                                </div>
+                                                <div class="user-name-popup comment" *ngIf="item?.showUserList && userList?.length > 0 && isShow">
+                                                    <ul class="comment">
+                                                        <li class="comment" *ngFor="let list of userList" (click)="selectUserForComment(list, item)">
+                                                            <span class="profile-img comment" *ngIf="list?.image_url"><img [src]="list?.image_url"></span>
+                                                            <span class="profile-img comment" *ngIf="!list?.image_url" [ngClass]="{'img-round-sec' : list?.image_url == null}">
+                                                                    <span class="text-round comment">{{getNameInitials(list)}}</span>
+                                                            </span>
+                                                            <span class="profile-name comment">{{list?.first_name}} {{list?.last_name}}</span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="posted-time">
+                                                <span>
+                                                    <button class="btn btn-primary" type="submit" [disabled]="checkValidValue(item.commentText)" (click)="addCommentForNews(item)">Post
+                                                        <img src="./assets/images/right-arrow.png">
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="bouncing-loader" *ngIf="isTweetsLoad">
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                            </div>
+                            <div class="no-content" *ngIf="twittersData?.length == 0">
+                                <h3>No Bookmarks</h3>
+                            </div>
+                        </div>
+                    </mat-tab>
+                    <mat-tab>
+                        <ng-template mat-tab-label>
+                            Trials
+                            <span class="count-no">({{newsSettingsData?.trial_bookmark_count}})</span>
+                        </ng-template>
+                        <div class="tab-content">
+                            <div class="has-content" *ngIf="trialsData?.length > 0 && isPageLoad && isNewsPageLoad">
+                                <div class="news-block trial-block" *ngFor="let item of trialsData; let index = index;">
+                                    <h4>
+                                        <a href="javascript:void(0)" (click)="trialNewsData(item)">
+                                            <strong>
+                                                <span *ngIf="item?.acronym">{{item?.acronym}}:</span>
+                                                <span [innerHTML]="item?.brief_title | trimstr : 180"></span></strong>
+                                        </a>
+                                        <!--bookmark sec start-->
+                                        <span class="icon-bookmark" (click)="addTrialsToBookmark(item, index)" title="{{getTooltipDataForTrail(item)}}"><i
+                                                class="fa" [ngClass]="{'fa-bookmark' : item?.is_bookmark == true, 'fa-bookmark-o' : item?.is_bookmark == false}"></i></span>
+                                        <!--bookmark sec end-->
+                                    </h4>
+                                    <ul class="trial-list">
+                                        <!-- <li *ngIf="item?.phase > 0">P{{item?.phase}}</li> -->
+                                        <li *ngIf="item?.phase == 'N/A'">P={{item?.phase}}<span class="separator">|</span></li>
+                                        <li *ngIf="item?.phase != 'N/A'">P{{item?.phase}}<span class="separator">|</span></li>
+                                        <li *ngIf="item?.lead_sponsor" [innerHTML]="item?.lead_sponsor"></li>
+                                        <li *ngIf="item?.enrollment"><span class="separator last-separator">|</span>Enrollment: {{item?.enrollment}}<span class="separator">|</span></li>
+                                        <li *ngIf="item?.overall_status" [ngClass]="{'font-purple': item?.overall_read_status == 0}"><span class="separator last-separator" *ngIf="!item?.enrollment">|</span>{{item?.overall_status}}</li>
+                                    </ul>
+                                    <ul class="trial-list">
+                                        <li *ngIf="item?.start_date" [ngClass]="{'font-purple': item?.start_date_read_status == 0}">Initiation: {{item?.start_date | dateformat : 'MM/DD/YYYY'}}<span class="separator">|</span></li>
+                                        <li *ngIf="item?.study_completion_date" [ngClass]="{'font-purple': item?.study_completion_date_read_status == 0}">Primary completion: {{item?.study_completion_date | dateformat : 'MM/DD/YYYY'}}<span class="separator">|</span></li>
+                                        <li *ngIf="item?.primary_completion_date" [ngClass]="{'font-purple': item?.primary_completion_date_read_status == 0}">Completion: {{item?.primary_completion_date | dateformat : 'MM/DD/YYYY'}}<span class="separator">|</span></li>
+                                        <li *ngIf="item?.related_news > 0" [ngClass]="{'font-purple': item?.related_news_is_updated == 0}">Related News​</li>
+                                    </ul>
+                                    <h4 *ngIf="item?.kols?.length > 0">
+                                        <span class="tag-list">
+                                            <span class="font-purple" *ngFor="let kol of item?.kols;let last = last">
+                                                {{kol?.kapp_full_name}}
+                                            </span>
+                                        </span>
+                                    </h4>
+                                    <!-- <h4 *ngIf="item?.products?.length > 0">
+                                        <span class="tag-list">
+                                            <span class="font-purple" *ngFor="let product of item?.products;let last = last">
+                                                {{product?.name}}
+                                            </span>
+                                        </span>
+                                    </h4> -->
+                                </div>
+                                <div class="bouncing-loader" *ngIf="isTrailsLoad">
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                            </div>
+                            <div class="no-content" *ngIf="trialsData?.length == 0 && isPageLoad">
+                                <h3>No Bookmarks</h3>
+                            </div>
+                        </div>
+                    </mat-tab>
+                </mat-tab-group>
+            </div>
+        </div>
+    </div>
+</div>

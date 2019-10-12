@@ -1,0 +1,216 @@
+<div class="breadcrumbs-sec">
+    <div class="container">
+        <ul class="breadcrubs-list previous-page">
+            <li (click)="goBack()">
+                <a href="javascript:void(0)" title="{{backTitle}}">{{backTitle}}</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<section class="sec-kols">
+    <div class="container">
+        <div class="kols-list subscription-tab">
+            <!-- tabbing start here-->
+            <mat-tab-group [selectedIndex]="selected">
+                <!-- first tab start-->
+                <mat-tab label="Groups">
+                    <div class="group-table-sec">
+                        <div class="add-group">
+                            <form [formGroup]="groupForm" novalidate>
+                                <div class="form-group">
+                                    <input type="text" placeholder="Add Group..." class="form-control" formControlName="groupName" onfocus="this.ph=this.placeholder;this.placeholder=''" onblur="this.placeholder = this.ph" (keyup)="resetMsgonKey()">
+                                    <span class="error" *ngIf="existsMsg"><strong>{{existsMsg}}</strong></span>
+                                </div>
+                                <div class="add-btn">
+                                    <button class="btn btn-primary" type="submit" title="Add" [disabled]="groupForm.invalid" (click)="addGroup()">Add</button>
+                                </div>
+
+                            </form>
+                        </div>
+                        <div class="table-sec">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Group Name</th>
+                                            <th>No. of KOLs</th>
+                                            <th>Delete</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody *ngIf="isGroups">
+                                        <tr *ngFor="let item of groupList">
+                                            <td class="group-name">{{item.name}}</td>
+                                            <td>{{item.no_of_kols}}</td>
+                                            <td><i class="fa fa-times" (click)="DeletePopup(item)"></i></td>
+                                        </tr>
+                                    </tbody>
+                                    <tbody *ngIf="!isGroups && isGroupLoad">
+                                        <tr>
+                                            <td colspan="3">
+                                                No groups added yet!
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </mat-tab>
+                <!-- first tab end-->
+                <!-- second tab start-->
+                <mat-tab label="Subscription">
+                    <div class="subscription-table">
+                        <div class="table-responive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Description</th>
+                                        <th>Entity</th>
+                                        <th>Subscribed</th>
+                                        <th>Starred</th>
+                                        <th>Available</th>
+                                        <th>Expires</th>
+                                        <th *ngIf="loggedUserData?.teams?.length > 0">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let list of planList; let i = index">
+                                        <td>{{list?.description}}</td>
+                                        <td>{{list?.entity}}</td>
+                                        <td *ngIf="list?.subscribed">{{list?.subscribed}}</td>
+                                        <td *ngIf="!list?.subscribed">0</td>
+                                        <td *ngIf="list?.starred">{{list?.starred}}</td>
+                                        <td *ngIf="!list?.starred">0</td>
+                                        <td *ngIf="list?.avilable">{{list?.avilable}}</td>
+                                        <td *ngIf="!list?.avilable">0</td>
+                                        <td *ngIf="list?.expires && list?.expires != '0000-00-00 00:00:00'">{{list?.expires | dateformat : 'MM/DD/YYYY'}}</td>
+                                        <td *ngIf="!list?.expires">Not Applicable</td>
+                                        <td *ngIf="list?.expires == '0000-00-00 00:00:00'">Not Applicable</td>
+                                        <ng-container *ngIf="loggedUserData?.teams?.length > 0">
+                                            <td *ngIf="list?.super_user_id">
+                                                <a href="javascript:void(0);" (click)="goToBack(list)" title="Manage" class="btn-primary btn">Manage</a>
+                                            </td>
+                                            <td *ngIf="!list?.super_user_id">
+                                                <a href="javascript:void(0);" (click)="goToBack(list)" title="View only" class="btn-primary btn">View only</a>
+                                            </td>
+                                        </ng-container>
+                                    </tr>
+                                    <!-- <tr colspan="8">
+                                        No subscribe exist.
+                                    </tr> -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <p>Please contact <a href="mailto:omni@larvol.com">omni@larvol.com</a> for updates or changes.
+                        </p>
+                    </div>
+                </mat-tab>
+                <!-- second tab end-->
+                <!-- third tab start-->
+                <mat-tab label="Details">
+                    <div class="detail-table-sec">
+                        <div class="table-responive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Sources</th>
+                                        <th>Basic</th>
+                                        <th>Premium</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="bg-yellow">
+                                        <td colspan="3">KOL</td>
+                                    </tr>
+                                    <tr>
+                                        <td>PubMed</td>
+                                        <td><span><i class="fa fa-check"></i></span></td>
+                                        <td><span><i class="fa fa-check"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Clinicaltrials.gov / EudraCT</td>
+                                        <td><span><i class="fa fa-check"></i></span></td>
+                                        <td><span><i class="fa fa-check"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Twitter</td>
+                                        <td><span><i class="fa fa-check"></i></span></td>
+                                        <td><span><i class="fa fa-check"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Upcoming events</td>
+                                        <td></td>
+                                        <td><span><i class="fa fa-check"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Media (YouTube, CME, Grand rounds, General Google news like Medscape, Healio, OncLive etc)</td>
+                                        <td></td>
+                                        <td><span><i class="fa fa-check"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Scientific conferences </td>
+                                        <td></td>
+                                        <td><span><i class="fa fa-check"></i></span></td>
+                                    </tr>
+                                </tbody>
+                                <tbody>
+                                    <tr class="bg-yellow">
+                                        <td colspan="3">CI</td>
+                                    </tr>
+                                    <tr>
+                                        <td>PubMed</td>
+                                        <td><span><i class="fa fa-check"></i></span></td>
+                                        <td><span><i class="fa fa-check"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Clinicaltrials.gov / EudraCT</td>
+                                        <td><span><i class="fa fa-check"></i></span></td>
+                                        <td><span><i class="fa fa-check"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Twitter</td>
+                                        <td><span><i class="fa fa-check"></i></span></td>
+                                        <td><span><i class="fa fa-check"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Newswires, Reuters, Press releases, Company websites,Google</td>
+                                        <td></td>
+                                        <td><span><i class="fa fa-check"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>FDA / EMA</td>
+                                        <td></td>
+                                        <td><span><i class="fa fa-check"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Corporate Communications Tracker</td>
+                                        <td></td>
+                                        <td><span><i class="fa fa-check"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Financial Analyst Monitor</td>
+                                        <td></td>
+                                        <td><span><i class="fa fa-check"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Scientific conferences</td>
+                                        <td></td>
+                                        <td><span><i class="fa fa-check"></i></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>General product news</td>
+                                        <td></td>
+                                        <td><span><i class="fa fa-check"></i></span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </mat-tab>
+                <!-- third tab end-->
+            </mat-tab-group>
+            <!-- tabbing end here-->
+        </div>
+    </div>
+</section>

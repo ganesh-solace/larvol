@@ -1,0 +1,118 @@
+<div class="action-sec clearfix">
+    <div class="row">
+        <div class="col-lg-7">
+            <ul class="list-left">
+                <li *ngIf="settingsData?.can_like" (click)="likeNews(item)">
+                    <a href="javascript:void(0)" title="Like" class="action-icon">
+                        <i class="fa" [ngClass]="{'fa-thumbs-up': item?.like_enabled == false, 'fa-thumbs-o-up': item?.like_enabled == true}"></i>
+                    </a>
+                    <a class="action-text" [ngClass]="{'primary-color': item?.like_enabled == false}" href="javascript:void(0)">Like</a>
+                </li>
+                <li *ngIf="settingsData?.can_comment" (click)="hideShowComment(item);">
+                    <a href="javascript:void(0)" title="Comment" class="action-icon">
+                        <i class="fa fa-comment-o"></i>
+                    </a>
+                    <a class="action-text" href="javascript:void(0)" id="{{item.id}}" #{{item.id}}>Comment</a>
+                </li>
+                <li (click)="sharePopup(item);">
+                    <a href="javascript:void(0)" title="Share" class="action-icon">
+                        <i class="fa fa-share"></i>
+                    </a>
+                    <a class="action-text" href="javascript:void(0)">Share</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-lg-5 text-right">
+            <ul class="list-right">
+                <li *ngIf="settingsData?.can_like">
+                    <a class="action-text" href="javascript:void(0)" (click)="openLikesList(item)" id="like_{{item.id}}">
+                        <span *ngIf="item?.like_count < 2">{{item?.like_count}}
+                            Like</span>
+                        <span *ngIf="item?.like_count > 1">{{item?.like_count}}
+                            Likes</span>
+                        <span *ngIf="item?.like_count > 1000">999+ Likes</span>
+                    </a>
+                </li>
+                <li *ngIf="settingsData?.can_comment">
+                    <a class="action-text" href="javascript:void(0)" (click)="hideShowComment(item);">
+                        <span *ngIf="item?.comment_count < 2">{{item?.comment_count}}
+                            Comment</span>
+                        <span *ngIf="item?.comment_count > 1">{{item?.comment_count}}
+                            Comments</span>
+                        <span *ngIf="item?.comment_count > 1000">999+
+                            Comments</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="action-text" href="javascript:void(0)">
+                        <span *ngIf="item?.shared_count < 2">{{item?.shared_count}}
+                            Share</span>
+                        <span *ngIf="item?.shared_count > 1">{{item?.shared_count}}
+                            Shares</span>
+                        <span *ngIf="item?.shared_count > 1000">999+
+                            Shares</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="comment-sec showComment" *ngIf="item?.isShow">
+    <p class="view-more" *ngIf="item?.settingData?.next_page">View more comments
+    </p>
+    <div class="comment-list">
+        <div class="comment-block" *ngFor="let list of item?.comments">
+            <div class="user-sec" *ngIf="!item?.user?.image_url" [ngClass]="{'img-round-sec' : item?.user?.image_url == null}">
+                <span class="text-round">{{getNameInitials(list?.user)}}</span>
+            </div>
+            <div class="user-sec" *ngIf="item?.image_url">
+                <img [src]="item?.user?.image_url" alt="{{list?.user?.full_name}}">
+            </div>
+            <div class="user-name">
+                <h4>
+                    <a href="javascript:void(0)">{{list?.user?.full_name}}</a>
+                </h4>
+                <p [innerHTML]="list?.comment"></p>
+            </div>
+            <div class="posted-time" *ngIf="item?.display_date">
+                <span>{{list?.display_date | timeAgo}}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="comment-form comment-block">
+        <div class="user-sec" *ngIf="usersData?.image_url">
+            <img [src]="usersData?.image_url" alt="{{usersData?.full_name}}">
+        </div>
+        <div class="user-sec" *ngIf="!usersData?.image_url" [ngClass]="{'img-round-sec' : usersData?.image_url == null}">
+            <!-- <img src="../../../assets/images/default-user.png" alt="{{KOLsData?.kol_full_name}}"> -->
+            <span class="text-round">{{getNameInitials(usersData)}}</span>
+        </div>
+        <div class="comment-input user-name">
+            <!-- <input class="form-control" type="text" placeholder="Add a comment" [(ngModel)]="item.commentText" id="myinputtext_{{item.id}}" (focus)="commentFocus($event, item.id)"> -->
+            <div data-placeholder="Add a comment" onfocus="this.ph=this.placeholder;this.placeholder=''" onblur="this.placeholder = this.ph" role="textbox" class="form-control input-tag comment-box single-line comment" [ngClass]="{'is-comment': item.commentText == '' || item.commentText == null}"
+                contenteditable="true" (focus)="commentFocus($event, item)" (input)="openUserList($event, item)" (textinput)="openUserList($event, item)" id="myinputtext_{{item.id}}" (keydown)="onKeydown($event)">
+            </div>
+            <div class="user-name-popup comment" *ngIf="item?.showUserList && userList?.length > 0 && isShow">
+                <ul class="comment">
+                    <li class="comment" *ngFor="let list of userList" (click)="selectUserForComment(list, item)">
+                        <span class="profile-img comment" *ngIf="list?.image_url"><img [src]="list?.image_url"></span>
+                        <span class="profile-img comment" *ngIf="!list?.image_url" [ngClass]="{'img-round-sec' : list?.image_url == null}">
+                            <span class="text-round comment">{{getNameInitials(list)}}</span>
+                        </span>
+                        <span class="profile-name comment">{{list?.first_name}}
+                            {{list?.last_name}}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="posted-time">
+            <span>
+                <button class="btn btn-primary" type="submit" [disabled]="checkValidValue(item.commentText)"
+                    (click)="addCommentForNews(item)">Post
+                    <img src="./assets/images/right-arrow.png">
+                </button>
+            </span>
+        </div>
+    </div>
+</div>
